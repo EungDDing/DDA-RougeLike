@@ -86,6 +86,18 @@ namespace DDARoguelike
                 return;
             }
 
+            IDamaged damaged = other.GetComponent<IDamaged>();
+
+            if (damaged == null)
+            {
+                damaged = other.GetComponentInParent<IDamaged>();
+            }
+
+            if (damaged != null)
+            {
+                damaged.TakeDamage(Mathf.RoundToInt(damage), "Player");
+            }
+
             Release();
         }
 

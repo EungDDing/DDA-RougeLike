@@ -12,7 +12,7 @@ namespace DDARoguelike
         protected override void Awake()
         {
             maxHp = 20.0f;
-            attackPower = 0.5f;
+            attackPower = 1;
             base.Awake();
             SetState(AI_State.Chase);
 
