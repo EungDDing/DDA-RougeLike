@@ -80,7 +80,7 @@ namespace DDARoguelike
                 }
 
                 projectile.transform.position = shotPosition.position;
-                projectile.Launch(direction, shotSpeed, attackRange, attackPower, projectilePool);
+                projectile.Launch(direction, shotSpeed, attackRange, attackPower, projectilePool, "Player", "Player");
             }
         }
 

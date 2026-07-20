@@ -4,6 +4,8 @@ namespace DDARoguelike
 {
     public class Projectile : MonoBehaviour
     {
+        private const string EnemyIgnoreTag = "Enemy";
+
         private Rigidbody2D rigidbody2D;
         private Vector2 spawnPosition;
         private Vector2 direction;
@@ -12,6 +14,8 @@ namespace DDARoguelike
         private float damage;
         private ProjectilePool ownerPool;
         private GameObject sourcePrefab;
+        private string attackerName;
+        private string ignoreTag;
         private bool isActive;
 
         public GameObject SourcePrefab => sourcePrefab;
@@ -36,13 +40,17 @@ namespace DDARoguelike
             float launchSpeed,
             float launchMaxRange,
             float launchDamage,
-            ProjectilePool pool)
+            ProjectilePool pool,
+            string launchAttackerName,
+            string launchIgnoreTag)
         {
             ownerPool = pool;
             direction = launchDirection.sqrMagnitude > 0.0f ? launchDirection.normalized : Vector2.right;
             speed = launchSpeed;
             maxRange = launchMaxRange;
             damage = launchDamage;
+            attackerName = launchAttackerName;
+            ignoreTag = launchIgnoreTag;
             spawnPosition = transform.position;
             isActive = true;
 
@@ -81,11 +89,28 @@ namespace DDARoguelike
                 return;
             }
 
-            if (other.CompareTag("Player"))
+            if (!string.IsNullOrEmpty(ignoreTag) && other.CompareTag(ignoreTag))
             {
                 return;
             }
 
+            if (ignoreTag == EnemyIgnoreTag)
+            {
+                if (other.CompareTag("Player"))
+                {
+                    ApplyDamage(other);
+                }
+
+                Release();
+                return;
+            }
+
+            ApplyDamage(other);
+            Release();
+        }
+
+        private void ApplyDamage(Collider2D other)
+        {
             IDamaged damaged = other.GetComponent<IDamaged>();
 
             if (damaged == null)
@@ -95,10 +120,8 @@ namespace DDARoguelike
 
             if (damaged != null)
             {
-                damaged.TakeDamage(Mathf.RoundToInt(damage), "Player");
+                damaged.TakeDamage(Mathf.RoundToInt(damage), attackerName);
             }
-
-            Release();
         }
 
         public void Release()
