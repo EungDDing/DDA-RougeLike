@@ -15,7 +15,6 @@ namespace DDARoguelike
         [SerializeField] private GameObject enemyProjectilePrefab;
         [SerializeField] private ProjectilePool projectilePool;
 
-        private Rigidbody2D rigidbody2D;
         private Transform playerTransform;
         private float nextFireTime;
 
@@ -25,8 +24,6 @@ namespace DDARoguelike
             attackPower = 1;
             base.Awake();
             SetState(AI_State.Chase);
-
-            rigidbody2D = GetComponent<Rigidbody2D>();
 
             if (rigidbody2D == null)
             {

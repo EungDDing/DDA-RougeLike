@@ -23,7 +23,7 @@ namespace DDARoguelike
 
         private float currentHp;
         private bool isDead;
-        private Rigidbody2D rigidbody2D;
+        protected Rigidbody2D rigidbody2D;
         private Vector2 knockbackVelocity;
         private float knockbackTimer;
         protected AI_State currentState;

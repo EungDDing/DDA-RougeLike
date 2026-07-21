@@ -11,6 +11,12 @@ namespace DDARoguelike
 
         public float MoveSpeed => moveSpeed;
 
+        public void AddMoveSpeed(float amount)
+        {
+            moveSpeed += amount;
+            Debug.Log($"MoveSpeed: {moveSpeed}");
+        }
+
         private void Awake()
         {
             rigidbody2D = GetComponent<Rigidbody2D>();

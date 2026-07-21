@@ -10,6 +10,7 @@ namespace DDARoguelike
         [SerializeField] private float attackRange = 6.0f;
         [SerializeField] private int projectileCount = 1;
         [SerializeField] private float shotSpeed = 3.0f;
+        [SerializeField] private float multiShotAngleDegrees = 15.0f;
         [SerializeField] private Transform shotPosition;
         [SerializeField] private GameObject playerProjectilePrefab;
         [SerializeField] private ProjectilePool projectilePool;
@@ -68,6 +69,41 @@ namespace DDARoguelike
             Fire(shootDirection.normalized);
         }
 
+        public void AddAttackPower(float amount)
+        {
+            attackPower += amount;
+            Debug.Log($"AttackPower: {attackPower}");
+        }
+
+        public void AddAttackRange(float amount)
+        {
+            attackRange += amount;
+            Debug.Log($"AttackRange: {attackRange}");
+        }
+
+        public void AddFireRate(float amount)
+        {
+            fireRate += amount;
+            Debug.Log($"FireRate: {fireRate}");
+        }
+
+        public void AddShotSpeed(float amount)
+        {
+            shotSpeed += amount;
+            Debug.Log($"ShotSpeed: {shotSpeed}");
+        }
+
+        public void AddProjectileCount(int amount)
+        {
+            if (amount == 0)
+            {
+                return;
+            }
+
+            projectileCount = Mathf.Max(1, projectileCount + amount);
+            Debug.Log($"ProjectileCount: {projectileCount}");
+        }
+
         private void Fire(Vector2 direction)
         {
             for (int i = 0; i < projectileCount; i++)
@@ -79,9 +115,23 @@ namespace DDARoguelike
                     continue;
                 }
 
+                float angleOffset = (i - (projectileCount - 1) * 0.5f) * multiShotAngleDegrees;
+                Vector2 shotDirection = RotateDirection(direction, angleOffset);
+
                 projectile.transform.position = shotPosition.position;
-                projectile.Launch(direction, shotSpeed, attackRange, attackPower, projectilePool, "Player", "Player");
+                projectile.Launch(shotDirection, shotSpeed, attackRange, attackPower, projectilePool, "Player", "Player");
             }
+        }
+
+        private static Vector2 RotateDirection(Vector2 direction, float angleDegrees)
+        {
+            float radians = angleDegrees * Mathf.Deg2Rad;
+            float cos = Mathf.Cos(radians);
+            float sin = Mathf.Sin(radians);
+
+            return new Vector2(
+                direction.x * cos - direction.y * sin,
+                direction.x * sin + direction.y * cos);
         }
 
         private Vector2 ReadShootDirection()

@@ -23,6 +23,31 @@ namespace DDARoguelike
             playerBomb = GetComponent<PlayerBomb>();
         }
 
+        public void AddMaxHp(int amount)
+        {
+            if (amount <= 0)
+            {
+                return;
+            }
+
+            maxHp += amount;
+            currentHp += amount;
+
+            int maxShield = MaxTotalDefense - maxHp;
+
+            if (maxShield < 0)
+            {
+                maxShield = 0;
+            }
+
+            if (shield > maxShield)
+            {
+                shield = maxShield;
+            }
+
+            Debug.Log($"MaxHp: {maxHp}  CurrentHp: {currentHp}  Shield: {shield}");
+        }
+
         public void AddShield(int amount)
         {
             if (amount <= 0)
