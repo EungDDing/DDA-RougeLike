@@ -10,6 +10,7 @@ namespace DDARoguelike
         [SerializeField] private ItemPickupPool itemPickupPool;
         [SerializeField] private GameObject bombPickupPrefab;
         [SerializeField] private GameObject shieldPickupPrefab;
+        [SerializeField] private GameObject healthUpPickupPrefab;
 
         private void Awake()
         {
@@ -26,6 +27,11 @@ namespace DDARoguelike
             if (shieldPickupPrefab == null)
             {
                 Debug.LogError($"[{nameof(TestPickupSpawner)}] shieldPickupPrefab is not assigned on {gameObject.name}.", this);
+            }
+
+            if (healthUpPickupPrefab == null)
+            {
+                Debug.LogError($"[{nameof(TestPickupSpawner)}] healthUpPickupPrefab is not assigned on {gameObject.name}.", this);
             }
         }
 
@@ -48,7 +54,10 @@ namespace DDARoguelike
 
         private void SpawnPickups()
         {
-            if (itemPickupPool == null || bombPickupPrefab == null || shieldPickupPrefab == null)
+            if (itemPickupPool == null
+                || bombPickupPrefab == null
+                || shieldPickupPrefab == null
+                || healthUpPickupPrefab == null)
             {
                 return;
             }
@@ -67,6 +76,13 @@ namespace DDARoguelike
             if (shieldPickup != null)
             {
                 shieldPickup.transform.position = origin + new Vector3(-SpawnOffsetX, 0.0f, 0.0f);
+            }
+
+            ItemPickup healthUpPickup = itemPickupPool.Get(healthUpPickupPrefab);
+
+            if (healthUpPickup != null)
+            {
+                healthUpPickup.transform.position = origin + new Vector3(0.0f, SpawnOffsetX, 0.0f);
             }
         }
     }

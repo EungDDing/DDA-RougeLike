@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace DDARoguelike
 {
-    public class ShieldPickup : ItemPickup
+    public class HealthUpPickup : ItemPickup
     {
-        private const int ShieldAmount = 2;
+        private const int HealAmount = 2;
 
         protected override bool CanCollect(GameObject collector)
         {
@@ -12,11 +12,11 @@ namespace DDARoguelike
 
             if (playerHealth == null)
             {
-                Debug.LogWarning($"[{nameof(ShieldPickup)}] {nameof(PlayerHealth)} was not found on collector.", this);
+                Debug.LogWarning($"[{nameof(HealthUpPickup)}] {nameof(PlayerHealth)} was not found on collector.", this);
                 return false;
             }
 
-            return playerHealth.CanAddShield();
+            return playerHealth.CanHeal();
         }
 
         public override void OnItemGet(GameObject collector)
@@ -25,11 +25,11 @@ namespace DDARoguelike
 
             if (playerHealth == null)
             {
-                Debug.LogWarning($"[{nameof(ShieldPickup)}] {nameof(PlayerHealth)} was not found on collector.", this);
+                Debug.LogWarning($"[{nameof(HealthUpPickup)}] {nameof(PlayerHealth)} was not found on collector.", this);
                 return;
             }
 
-            playerHealth.AddShield(ShieldAmount);
+            playerHealth.Heal(HealAmount);
         }
 
         private static PlayerHealth ResolvePlayerHealth(GameObject collector)

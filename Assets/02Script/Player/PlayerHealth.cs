@@ -16,11 +16,37 @@ namespace DDARoguelike
         public int MaxHp => maxHp;
         public int Shield => shield;
 
+        public bool CanHeal()
+        {
+            return currentHp < maxHp;
+        }
+
+        public bool CanAddShield()
+        {
+            return maxHp + shield < MaxTotalDefense;
+        }
+
         private void Awake()
         {
             currentHp = maxHp;
             shield = 0;
             playerBomb = GetComponent<PlayerBomb>();
+        }
+
+        public void Heal(int amount)
+        {
+            if (amount <= 0)
+            {
+                return;
+            }
+
+            if (!CanHeal())
+            {
+                return;
+            }
+
+            currentHp = Mathf.Min(maxHp, currentHp + amount);
+            Debug.Log($"CurrentHp: {currentHp}  MaxHp: {maxHp}");
         }
 
         public void AddMaxHp(int amount)

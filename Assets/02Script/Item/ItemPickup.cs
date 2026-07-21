@@ -28,6 +28,11 @@ namespace DDARoguelike
 
         public abstract void OnItemGet(GameObject collector);
 
+        protected virtual bool CanCollect(GameObject collector)
+        {
+            return true;
+        }
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (isCollected)
@@ -36,6 +41,11 @@ namespace DDARoguelike
             }
 
             if (!other.CompareTag("Player"))
+            {
+                return;
+            }
+
+            if (!CanCollect(other.gameObject))
             {
                 return;
             }
