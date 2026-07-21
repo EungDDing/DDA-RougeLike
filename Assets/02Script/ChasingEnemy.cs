@@ -37,6 +37,11 @@ namespace DDARoguelike
 
         private void FixedUpdate()
         {
+            if (TryApplyKnockbackMovement())
+            {
+                return;
+            }
+
             if (rigidbody2D == null)
             {
                 return;

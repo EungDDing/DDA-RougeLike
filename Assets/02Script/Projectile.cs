@@ -106,6 +106,7 @@ namespace DDARoguelike
             }
 
             ApplyDamage(other);
+            ApplyKnockbackToEnemy(other);
             Release();
         }
 
@@ -121,6 +122,21 @@ namespace DDARoguelike
             if (damaged != null)
             {
                 damaged.TakeDamage(Mathf.RoundToInt(damage), attackerName);
+            }
+        }
+
+        private void ApplyKnockbackToEnemy(Collider2D other)
+        {
+            Enemy enemy = other.GetComponent<Enemy>();
+
+            if (enemy == null)
+            {
+                enemy = other.GetComponentInParent<Enemy>();
+            }
+
+            if (enemy != null)
+            {
+                enemy.ApplyKnockback(direction);
             }
         }
 

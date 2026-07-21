@@ -18,9 +18,14 @@ namespace DDARoguelike
 
         [SerializeField] protected float maxHp;
         [SerializeField] protected int attackPower;
+        [SerializeField] private float knockbackForce = 2.0f;
+        [SerializeField] private float knockbackDuration = 0.1f;
 
         private float currentHp;
         private bool isDead;
+        private Rigidbody2D rigidbody2D;
+        private Vector2 knockbackVelocity;
+        private float knockbackTimer;
         protected AI_State currentState;
 
         public float MaxHp => maxHp;
@@ -31,6 +36,35 @@ namespace DDARoguelike
         protected virtual void Awake()
         {
             currentHp = maxHp;
+            rigidbody2D = GetComponent<Rigidbody2D>();
+        }
+
+        public void ApplyKnockback(Vector2 projectileDirection)
+        {
+            if (isDead || rigidbody2D == null)
+            {
+                return;
+            }
+
+            if (projectileDirection.sqrMagnitude <= 0.0001f)
+            {
+                return;
+            }
+
+            knockbackVelocity = projectileDirection.normalized * knockbackForce;
+            knockbackTimer = knockbackDuration;
+        }
+
+        protected bool TryApplyKnockbackMovement()
+        {
+            if (knockbackTimer <= 0.0f || rigidbody2D == null)
+            {
+                return false;
+            }
+
+            knockbackTimer -= Time.fixedDeltaTime;
+            rigidbody2D.linearVelocity = knockbackVelocity;
+            return true;
         }
 
         private void Update()
@@ -123,6 +157,7 @@ namespace DDARoguelike
 
             isDead = true;
             currentHp = 0.0f;
+            knockbackTimer = 0.0f;
             SetState(AI_State.Die);
 
             Collider2D[] colliders = GetComponents<Collider2D>();
@@ -132,11 +167,16 @@ namespace DDARoguelike
                 colliders[i].enabled = false;
             }
 
-            Rigidbody2D rigidbody2D = GetComponent<Rigidbody2D>();
+            Rigidbody2D deathRigidbody = rigidbody2D;
 
-            if (rigidbody2D != null)
+            if (deathRigidbody == null)
             {
-                rigidbody2D.linearVelocity = Vector2.zero;
+                deathRigidbody = GetComponent<Rigidbody2D>();
+            }
+
+            if (deathRigidbody != null)
+            {
+                deathRigidbody.linearVelocity = Vector2.zero;
             }
 
             Destroy(gameObject, DestroyDelaySeconds);
