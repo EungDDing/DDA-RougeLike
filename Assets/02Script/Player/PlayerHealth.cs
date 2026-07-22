@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace DDARoguelike
@@ -16,6 +17,8 @@ namespace DDARoguelike
         public int MaxHp => maxHp;
         public int Shield => shield;
 
+        public event Action HealthChanged;
+
         public bool CanHeal()
         {
             return currentHp < maxHp;
@@ -31,6 +34,7 @@ namespace DDARoguelike
             currentHp = maxHp;
             shield = 0;
             playerBomb = GetComponent<PlayerBomb>();
+            NotifyHealthChanged();
         }
 
         public void Heal(int amount)
@@ -47,6 +51,7 @@ namespace DDARoguelike
 
             currentHp = Mathf.Min(maxHp, currentHp + amount);
             Debug.Log($"CurrentHp: {currentHp}  MaxHp: {maxHp}");
+            NotifyHealthChanged();
         }
 
         public void AddMaxHp(int amount)
@@ -72,6 +77,7 @@ namespace DDARoguelike
             }
 
             Debug.Log($"MaxHp: {maxHp}  CurrentHp: {currentHp}  Shield: {shield}");
+            NotifyHealthChanged();
         }
 
         public void AddShield(int amount)
@@ -91,6 +97,7 @@ namespace DDARoguelike
             int appliedAmount = Mathf.Min(amount, remainingCapacity);
             shield += appliedAmount;
             LogBombAndShield();
+            NotifyHealthChanged();
         }
 
         public void TakeDamage(int damage, string attackerName)
@@ -116,6 +123,15 @@ namespace DDARoguelike
 
             Debug.Log(
                 $"{attackerName} dealt {damage} damage to {gameObject.name}. Remaining Shield: {shield}, Remaining HP: {currentHp}");
+            NotifyHealthChanged();
+        }
+
+        private void NotifyHealthChanged()
+        {
+            if (HealthChanged != null)
+            {
+                HealthChanged.Invoke();
+            }
         }
 
         private void LogBombAndShield()
