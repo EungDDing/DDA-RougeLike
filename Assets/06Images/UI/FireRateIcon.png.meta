@@ -1,0 +1,248 @@
+fileFormatVersion: 2
+guid: 7387332010ad8b44fb1a80a29d3342a3
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5648514090996334442
+    second: FireRateIcon_0
+  - first:
+      213: -3133534274271052679
+    second: FireRateIcon_1
+  - first:
+      213: -489042784816815625
+    second: FireRateIcon_2
+  - first:
+      213: 5807082429447421957
+    second: FireRateIcon_3
+  - first:
+      213: 8133857750705970103
+    second: FireRateIcon_4
+  - first:
+      213: -4707726239701302086
+    second: FireRateIcon_5
+  - first:
+      213: -3009404696519228030
+    second: FireRateIcon_6
+  - first:
+      213: -5196179565996507710
+    second: FireRateIcon_7
+  - first:
+      213: 715408360681989353
+    second: FireRateIcon_8
+  - first:
+      213: 6453558084357079242
+    second: FireRateIcon_9
+  - first:
+      213: 3002404731934287883
+    second: FireRateIcon_10
+  - first:
+      213: -6032771638727269414
+    second: FireRateIcon_11
+  - first:
+      213: -8940077421492048139
+    second: FireRateIcon_12
+  - first:
+      213: -7009275737474968077
+    second: FireRateIcon_13
+  - first:
+      213: -8706513803959904891
+    second: FireRateIcon_14
+  - first:
+      213: -6684425999207882522
+    second: FireRateIcon_15
+  - first:
+      213: 4662391843853994671
+    second: FireRateIcon_16
+  - first:
+      213: 1458805134442397381
+    second: FireRateIcon_17
+  - first:
+      213: 7832896194682316751
+    second: FireRateIcon_18
+  - first:
+      213: 6344397680797323672
+    second: FireRateIcon_19
+  - first:
+      213: -606114630759385297
+    second: FireRateIcon_20
+  - first:
+      213: 8765955900731182906
+    second: FireRateIcon_21
+  - first:
+      213: 3496323518584378746
+    second: FireRateIcon_22
+  - first:
+      213: 7421129373976888554
+    second: FireRateIcon_23
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: FireRateIcon_0
+      rect:
+        serializedVersion: 2
+        x: 509
+        y: 472
+        width: 360
+        height: 240
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69000618c527c91b0800000000000000
+      internalID: -5648514090996334442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5a53d6447933ba94ab077db532e1be7c
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      FireRateIcon_0: -5648514090996334442
+      FireRateIcon_1: -3133534274271052679
+      FireRateIcon_10: 3002404731934287883
+      FireRateIcon_11: -6032771638727269414
+      FireRateIcon_12: -8940077421492048139
+      FireRateIcon_13: -7009275737474968077
+      FireRateIcon_14: -8706513803959904891
+      FireRateIcon_15: -6684425999207882522
+      FireRateIcon_16: 4662391843853994671
+      FireRateIcon_17: 1458805134442397381
+      FireRateIcon_18: 7832896194682316751
+      FireRateIcon_19: 6344397680797323672
+      FireRateIcon_2: -489042784816815625
+      FireRateIcon_20: -606114630759385297
+      FireRateIcon_21: 8765955900731182906
+      FireRateIcon_22: 3496323518584378746
+      FireRateIcon_23: 7421129373976888554
+      FireRateIcon_3: 5807082429447421957
+      FireRateIcon_4: 8133857750705970103
+      FireRateIcon_5: -4707726239701302086
+      FireRateIcon_6: -3009404696519228030
+      FireRateIcon_7: -5196179565996507710
+      FireRateIcon_8: 715408360681989353
+      FireRateIcon_9: 6453558084357079242
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

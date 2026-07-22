@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -22,6 +23,8 @@ namespace DDARoguelike
         public float AttackRange => attackRange;
         public int ProjectileCount => projectileCount;
         public float ShotSpeed => shotSpeed;
+
+        public event Action StatsChanged;
 
         private void Awake()
         {
@@ -73,24 +76,28 @@ namespace DDARoguelike
         {
             attackPower += amount;
             Debug.Log($"AttackPower: {attackPower}");
+            NotifyStatsChanged();
         }
 
         public void AddAttackRange(float amount)
         {
             attackRange += amount;
             Debug.Log($"AttackRange: {attackRange}");
+            NotifyStatsChanged();
         }
 
         public void AddFireRate(float amount)
         {
             fireRate += amount;
             Debug.Log($"FireRate: {fireRate}");
+            NotifyStatsChanged();
         }
 
         public void AddShotSpeed(float amount)
         {
             shotSpeed += amount;
             Debug.Log($"ShotSpeed: {shotSpeed}");
+            NotifyStatsChanged();
         }
 
         public void AddProjectileCount(int amount)
@@ -102,6 +109,15 @@ namespace DDARoguelike
 
             projectileCount = Mathf.Max(1, projectileCount + amount);
             Debug.Log($"ProjectileCount: {projectileCount}");
+            NotifyStatsChanged();
+        }
+
+        private void NotifyStatsChanged()
+        {
+            if (StatsChanged != null)
+            {
+                StatsChanged.Invoke();
+            }
         }
 
         private void Fire(Vector2 direction)

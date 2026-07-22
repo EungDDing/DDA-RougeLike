@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,10 +12,13 @@ namespace DDARoguelike
 
         public float MoveSpeed => moveSpeed;
 
+        public event Action StatsChanged;
+
         public void AddMoveSpeed(float amount)
         {
             moveSpeed += amount;
             Debug.Log($"MoveSpeed: {moveSpeed}");
+            NotifyStatsChanged();
         }
 
         private void Awake()
@@ -24,6 +28,14 @@ namespace DDARoguelike
             if (rigidbody2D == null)
             {
                 Debug.LogError($"[{nameof(PlayerMove)}] Rigidbody2D is required on {gameObject.name}.", this);
+            }
+        }
+
+        private void NotifyStatsChanged()
+        {
+            if (StatsChanged != null)
+            {
+                StatsChanged.Invoke();
             }
         }
 
