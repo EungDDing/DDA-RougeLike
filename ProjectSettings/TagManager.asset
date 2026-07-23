@@ -9,6 +9,7 @@ TagManager:
   - PlayerProjectile
   - Wall
   - Ground
+  - Door
   layers:
   - Default
   - TransparentFX

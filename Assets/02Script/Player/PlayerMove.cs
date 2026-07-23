@@ -9,6 +9,7 @@ namespace DDARoguelike
         [SerializeField] private float moveSpeed = 10.0f;
 
         private Rigidbody2D rigidbody2D;
+        private bool isMovementEnabled = true;
 
         public float MoveSpeed => moveSpeed;
 
@@ -19,6 +20,16 @@ namespace DDARoguelike
             moveSpeed += amount;
             Debug.Log($"MoveSpeed: {moveSpeed}");
             NotifyStatsChanged();
+        }
+
+        public void SetMovementEnabled(bool isEnabled)
+        {
+            isMovementEnabled = isEnabled;
+
+            if (!isMovementEnabled && rigidbody2D != null)
+            {
+                rigidbody2D.linearVelocity = Vector2.zero;
+            }
         }
 
         private void Awake()
@@ -43,6 +54,12 @@ namespace DDARoguelike
         {
             if (rigidbody2D == null)
             {
+                return;
+            }
+
+            if (!isMovementEnabled)
+            {
+                rigidbody2D.linearVelocity = Vector2.zero;
                 return;
             }
 

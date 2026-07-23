@@ -353,6 +353,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -478,6 +479,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1a2b3c4d5e60718293a4b5c6d7e8f90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DDARoguelike.RoomCamera
+  focusDuration: 0.3
 --- !u!1 &584603326
 GameObject:
   m_ObjectHideFlags: 0
@@ -1181,10 +1195,20 @@ MonoBehaviour:
   normalRoomPrefab: {fileID: 3599595109936182861, guid: bbce5ea467b661842b09a0ced0be29fb, type: 3}
   bossRoomPrefab: {fileID: 495375474141493902, guid: 0d42287fa4f15224698527bf0e7cd608, type: 3}
   goldenRoomPrefab: {fileID: 2373120705155901437, guid: a705ffec688f43d40bbc6bf621df29e5, type: 3}
+  lrNormalDoorPrefab: {fileID: 6070252883268173738, guid: 468085ca4cea58644b931edd3277387e, type: 3}
+  tdNormalDoorPrefab: {fileID: 3934385051277843991, guid: fb043bc88627f374d9577c81e67a7c52, type: 3}
+  lrGoldenDoorPrefab: {fileID: 5958841051827047017, guid: c80c6ade89c31ae4990b066a164bd0fe, type: 3}
+  tdGoldenDoorPrefab: {fileID: 4434152332243894095, guid: 050ad62889faf2d4aba0af8bd104a7c1, type: 3}
+  lrBossDoorPrefab: {fileID: 1762201726523986607, guid: 7c43ccd121748be469e1d51dfbcf0e7d, type: 3}
+  tdBossDoorPrefab: {fileID: 2908096716164076560, guid: ff0f52e15144c89449334c712669a0fb, type: 3}
+  lrNoRoomPrefab: {fileID: 8017805041532031717, guid: 47e1fbff5299aa84e8c50764a49c68de, type: 3}
+  tdNoRoomPrefab: {fileID: 3752934189404885490, guid: 1a5ea6029132d5041a25ab9c16a07f05, type: 3}
   roomSpacing: {x: 20, y: 10}
   roomsRoot: {fileID: 0}
   seed: 0
   useRandomSeed: 1
+  roomCamera: {fileID: 519420033}
+  playerTransform: {fileID: 291874015}
 --- !u!1 &8765432109876543210
 GameObject:
   m_ObjectHideFlags: 0
