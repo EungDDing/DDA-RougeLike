@@ -160,6 +160,13 @@ namespace DDARoguelike
             knockbackTimer = 0.0f;
             SetState(AI_State.Die);
 
+            RoomController roomController = GetComponentInParent<RoomController>();
+
+            if (roomController != null)
+            {
+                roomController.NotifyEnemyDied();
+            }
+
             Collider2D[] colliders = GetComponents<Collider2D>();
 
             for (int i = 0; i < colliders.Length; i++)
