@@ -10,6 +10,9 @@ TagManager:
   - Wall
   - Ground
   - Door
+  - Hole
+  - Thorn
+  - Rock
   layers:
   - Default
   - TransparentFX
