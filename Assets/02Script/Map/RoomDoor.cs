@@ -177,7 +177,7 @@ namespace DDARoguelike
                 return;
             }
 
-            bool isOpen = ownerRoom.IsCleared && targetRoom.IsCleared;
+            bool isOpen = ownerRoom.IsCleared;
             closedObject.SetActive(!isOpen);
         }
     }
