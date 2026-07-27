@@ -12,10 +12,11 @@ namespace DDARoguelike
         private bool isInitialized;
 
         public bool IsCleared { get; private set; }
+        public RoomType RoomType { get; private set; }
 
         public event Action ClearedChanged;
 
-        public void Initialize()
+        public void Initialize(RoomType roomType)
         {
             if (isInitialized)
             {
@@ -23,6 +24,7 @@ namespace DDARoguelike
             }
 
             isInitialized = true;
+            RoomType = roomType;
 
             Enemy[] enemies = GetComponentsInChildren<Enemy>(true);
             aliveEnemyCount = enemies.Length;

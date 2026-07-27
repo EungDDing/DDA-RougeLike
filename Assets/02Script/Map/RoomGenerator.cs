@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace DDARoguelike
 {
@@ -35,6 +37,8 @@ namespace DDARoguelike
         [SerializeField] private bool useRandomSeed = true;
         [SerializeField] private RoomCamera roomCamera;
         [SerializeField] private Transform playerTransform;
+
+        public event Action<RoomController> StageStarted;
 
         private void Start()
         {
@@ -81,6 +85,16 @@ namespace DDARoguelike
             Dictionary<Vector2Int, RoomController> rooms = SpawnRooms(layout);
             SpawnRoomEdges(layout, rooms);
             PlacePlayerAndCamera(rooms);
+
+            RoomController bossRoom = FindRoomByType(rooms, RoomType.Boss);
+
+            if (bossRoom == null)
+            {
+                Debug.LogError($"[{nameof(RoomGenerator)}] Boss room was not found after generation.", this);
+                return;
+            }
+
+            StageStarted?.Invoke(bossRoom);
         }
 
         private bool ValidatePrefabs()
@@ -455,11 +469,26 @@ namespace DDARoguelike
                     roomController = instance.AddComponent<RoomController>();
                 }
 
-                roomController.Initialize();
+                roomController.Initialize(entry.Value);
                 rooms[entry.Key] = roomController;
             }
 
             return rooms;
+        }
+
+        private static RoomController FindRoomByType(
+            Dictionary<Vector2Int, RoomController> rooms,
+            RoomType roomType)
+        {
+            foreach (RoomController room in rooms.Values)
+            {
+                if (room != null && room.RoomType == roomType)
+                {
+                    return room;
+                }
+            }
+
+            return null;
         }
 
         private void SpawnRoomEdges(

@@ -18,6 +18,7 @@ namespace DDARoguelike
         public int Shield => shield;
 
         public event Action HealthChanged;
+        public event Action<int, string> Damaged;
 
         public bool CanHeal()
         {
@@ -107,6 +108,7 @@ namespace DDARoguelike
                 return;
             }
 
+            int totalDefenseBeforeDamage = currentHp + shield;
             int remainingDamage = damage;
 
             if (shield > 0)
@@ -123,6 +125,14 @@ namespace DDARoguelike
 
             Debug.Log(
                 $"{attackerName} dealt {damage} damage to {gameObject.name}. Remaining Shield: {shield}, Remaining HP: {currentHp}");
+
+            int appliedDamage = totalDefenseBeforeDamage - currentHp - shield;
+
+            if (appliedDamage > 0)
+            {
+                Damaged?.Invoke(appliedDamage, attackerName);
+            }
+
             NotifyHealthChanged();
         }
 

@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f6e2a91c3d8495ba0f4e21d7c8b9631, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::DDARoguelike.TemporaryBoss
-  maxHp: 100
+  maxHp: 30
   attackPower: 1
   knockbackForce: 1
   knockbackDuration: 0.05

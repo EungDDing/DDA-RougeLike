@@ -25,6 +25,7 @@ namespace DDARoguelike
         public float ShotSpeed => shotSpeed;
 
         public event Action StatsChanged;
+        public event Action<int> ShotsFired;
 
         private void Awake()
         {
@@ -122,6 +123,8 @@ namespace DDARoguelike
 
         private void Fire(Vector2 direction)
         {
+            int firedProjectileCount = 0;
+
             for (int i = 0; i < projectileCount; i++)
             {
                 Projectile projectile = projectilePool.Get(playerProjectilePrefab);
@@ -136,6 +139,12 @@ namespace DDARoguelike
 
                 projectile.transform.position = shotPosition.position;
                 projectile.Launch(shotDirection, shotSpeed, attackRange, attackPower, projectilePool, "Player", "Player");
+                firedProjectileCount++;
+            }
+
+            if (firedProjectileCount > 0)
+            {
+                ShotsFired?.Invoke(firedProjectileCount);
             }
         }
 
