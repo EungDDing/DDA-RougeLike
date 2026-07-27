@@ -49,7 +49,7 @@ namespace DDARoguelike
 
         protected override void Awake()
         {
-            maxHp = 100.0f;
+            maxHp = 30.0f;
             attackPower = 1;
             base.Awake();
             SetState(AI_State.Idle);

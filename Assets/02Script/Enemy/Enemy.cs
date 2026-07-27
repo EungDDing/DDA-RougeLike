@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace DDARoguelike
@@ -32,6 +33,8 @@ namespace DDARoguelike
         public float CurrentHp => currentHp;
         public int AttackPower => attackPower;
         public AI_State CurrentState => currentState;
+
+        public event Action<float, string> Damaged;
 
         protected virtual void Awake()
         {
@@ -109,13 +112,20 @@ namespace DDARoguelike
 
         public void TakeDamage(int damage, string attackerName)
         {
-            if (isDead)
+            if (isDead || damage <= 0)
             {
                 return;
             }
 
+            float hpBeforeDamage = currentHp;
             currentHp = Mathf.Max(0.0f, currentHp - damage);
+            float appliedDamage = hpBeforeDamage - currentHp;
             Debug.Log($"{attackerName} dealt {damage} damage to {gameObject.name}. Remaining HP: {currentHp}");
+
+            if (appliedDamage > 0.0f)
+            {
+                Damaged?.Invoke(appliedDamage, attackerName);
+            }
 
             if (currentHp <= 0.0f)
             {
