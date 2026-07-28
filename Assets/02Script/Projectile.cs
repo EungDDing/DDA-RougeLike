@@ -5,6 +5,8 @@ namespace DDARoguelike
     public class Projectile : MonoBehaviour
     {
         private const string EnemyIgnoreTag = "Enemy";
+        private const string ThornTag = "Thorn";
+        private const string HoleTag = "Hole";
 
         private Rigidbody2D rigidbody2D;
         private Vector2 spawnPosition;
@@ -90,6 +92,11 @@ namespace DDARoguelike
             }
 
             if (!string.IsNullOrEmpty(ignoreTag) && other.CompareTag(ignoreTag))
+            {
+                return;
+            }
+
+            if (other.CompareTag(ThornTag) || other.CompareTag(HoleTag))
             {
                 return;
             }

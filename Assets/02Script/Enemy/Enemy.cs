@@ -133,7 +133,7 @@ namespace DDARoguelike
             }
         }
 
-        private void OnCollisionEnter2D(Collision2D collision)
+        protected virtual void OnCollisionEnter2D(Collision2D collision)
         {
             if (isDead || currentState == AI_State.Die)
             {
