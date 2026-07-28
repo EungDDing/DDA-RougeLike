@@ -23,8 +23,8 @@ TagManager:
   - EnemyProjectile
   - PlayerProjectile
   - PickupItem
-  - 
-  - 
+  - Obstacle
+  - FlyingEnemy
   - 
   - 
   - 
