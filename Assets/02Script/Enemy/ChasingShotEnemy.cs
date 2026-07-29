@@ -50,6 +50,11 @@ namespace DDARoguelike
 
             if (projectilePool == null)
             {
+                projectilePool = FindFirstObjectByType<ProjectilePool>();
+            }
+
+            if (projectilePool == null)
+            {
                 Debug.LogError($"[{nameof(ChasingShotEnemy)}] projectilePool is not assigned on {gameObject.name}.", this);
             }
 
@@ -62,6 +67,27 @@ namespace DDARoguelike
             else
             {
                 playerTransform = playerObject.transform;
+            }
+        }
+
+        protected override void OnPreparedFromPool()
+        {
+            SetState(AI_State.Chase);
+            nextFireTime = 0.0f;
+
+            if (projectilePool == null)
+            {
+                projectilePool = FindFirstObjectByType<ProjectilePool>();
+            }
+
+            if (playerTransform == null)
+            {
+                GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+
+                if (playerObject != null)
+                {
+                    playerTransform = playerObject.transform;
+                }
             }
         }
 

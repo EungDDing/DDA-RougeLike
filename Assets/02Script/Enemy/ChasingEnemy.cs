@@ -40,6 +40,21 @@ namespace DDARoguelike
             }
         }
 
+        protected override void OnPreparedFromPool()
+        {
+            SetState(AI_State.Chase);
+
+            if (playerTransform == null)
+            {
+                GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+
+                if (playerObject != null)
+                {
+                    playerTransform = playerObject.transform;
+                }
+            }
+        }
+
         private void FixedUpdate()
         {
             if (TryApplyKnockbackMovement())

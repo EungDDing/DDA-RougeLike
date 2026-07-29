@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace DDARoguelike
@@ -15,7 +16,7 @@ namespace DDARoguelike
 
     public abstract class Enemy : MonoBehaviour, IDamaged
     {
-        private const float DestroyDelaySeconds = 0.5f;
+        private const float ReleaseDelaySeconds = 0.5f;
 
         [SerializeField] protected float maxHp;
         [SerializeField] protected int attackPower;
@@ -28,11 +29,16 @@ namespace DDARoguelike
         private Vector2 knockbackVelocity;
         private float knockbackTimer;
         protected AI_State currentState;
+        private GameObject sourcePrefab;
+        private EnemyPool ownerPool;
+        private Coroutine releaseCoroutine;
+        private Vector3 prefabLocalScale = Vector3.one;
 
         public float MaxHp => maxHp;
         public float CurrentHp => currentHp;
         public int AttackPower => attackPower;
         public AI_State CurrentState => currentState;
+        public GameObject SourcePrefab => sourcePrefab;
 
         public event Action<float, string> Damaged;
 
@@ -40,6 +46,50 @@ namespace DDARoguelike
         {
             currentHp = maxHp;
             rigidbody2D = GetComponent<Rigidbody2D>();
+        }
+
+        public void ConfigurePooling(GameObject prefab, EnemyPool pool)
+        {
+            sourcePrefab = prefab;
+            ownerPool = pool;
+
+            if (prefab != null)
+            {
+                prefabLocalScale = prefab.transform.localScale;
+            }
+        }
+
+        public void PrepareFromPool()
+        {
+            if (releaseCoroutine != null)
+            {
+                StopCoroutine(releaseCoroutine);
+                releaseCoroutine = null;
+            }
+
+            isDead = false;
+            currentHp = maxHp;
+            knockbackTimer = 0.0f;
+            knockbackVelocity = Vector2.zero;
+            transform.localScale = prefabLocalScale;
+
+            Collider2D[] colliders = GetComponents<Collider2D>();
+
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                colliders[i].enabled = true;
+            }
+
+            if (rigidbody2D != null)
+            {
+                rigidbody2D.linearVelocity = Vector2.zero;
+            }
+
+            OnPreparedFromPool();
+        }
+
+        protected virtual void OnPreparedFromPool()
+        {
         }
 
         public void ApplyKnockback(Vector2 projectileDirection)
@@ -196,7 +246,25 @@ namespace DDARoguelike
                 deathRigidbody.linearVelocity = Vector2.zero;
             }
 
-            Destroy(gameObject, DestroyDelaySeconds);
+            if (ownerPool != null)
+            {
+                releaseCoroutine = StartCoroutine(ReleaseAfterDelay());
+            }
+            else
+            {
+                Destroy(gameObject, ReleaseDelaySeconds);
+            }
+        }
+
+        private IEnumerator ReleaseAfterDelay()
+        {
+            yield return new WaitForSeconds(ReleaseDelaySeconds);
+            releaseCoroutine = null;
+
+            if (ownerPool != null)
+            {
+                ownerPool.Release(this);
+            }
         }
 
         protected virtual void OnIdle()
