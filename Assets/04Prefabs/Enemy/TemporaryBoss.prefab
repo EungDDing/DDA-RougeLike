@@ -175,20 +175,7 @@ MonoBehaviour:
   attackPower: 1
   knockbackForce: 1
   knockbackDuration: 0.05
-  activationRange: 10
-  telegraphDuration: 0.6
-  patternCooldown: 1
-  telegraphColor: {r: 1, g: 0.2, b: 0.2, a: 1}
-  shotPosition: {fileID: 6543748616582597821}
-  enemyProjectilePrefab: {fileID: 1257241605914056924, guid: d9f3cee2ece5706488e1071d0fc93309, type: 3}
-  projectilePool: {fileID: 0}
-  shotSpeed: 4
-  shotRange: 20
-  aimedBurstCount: 3
-  aimedBurstInterval: 0.18
-  radialProjectileCount: 12
-  chargeSpeed: 8
-  chargeDuration: 0.6
+  bossData: {fileID: 11400000, guid: 20000000000000000000000000000005, type: 2}
 --- !u!1 &8933158483428149144
 GameObject:
   m_ObjectHideFlags: 0
