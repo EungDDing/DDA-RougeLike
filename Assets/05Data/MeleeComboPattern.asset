@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10000000000000000000000000000008, type: 3}
+  m_Name: MeleeComboPattern
+  m_EditorClassIdentifier:
+  patternName: Melee Combo
+  weight: 0.9
+  minimumActivationDistance: 0
+  maximumActivationDistance: 3.5
+  telegraphDuration: 0.35
+  recoveryDuration: 0.9
+  telegraphColor: {r: 1, g: 0.35, b: 0.15, a: 1}
+  hitCount: 3
+  followUpTelegraphDuration: 0.16
+  intervalBetweenHits: 0.12
+  lungeSpeed: 4
+  lungeDuration: 0.08
+  attackRange: 1.7
+  attackArc: 135
+  damageMultiplier: 1
