@@ -15,6 +15,7 @@ namespace DDARoguelike
         private Vector2Int direction;
         private GameObject closedObject;
         private RoomCamera roomCamera;
+        private EnemyPool enemyPool;
 
         public void Initialize(RoomController owner, RoomController target, Vector2Int doorDirection)
         {
@@ -143,6 +144,16 @@ namespace DDARoguelike
             else
             {
                 Debug.LogError($"[{nameof(RoomDoor)}] {nameof(RoomCamera)} was not found in the scene.", this);
+            }
+
+            if (enemyPool == null)
+            {
+                enemyPool = FindFirstObjectByType<EnemyPool>();
+            }
+
+            if (targetRoom != null)
+            {
+                targetRoom.TrySpawnEnemies(enemyPool);
             }
 
             StartCoroutine(FinishTransition(playerMove));

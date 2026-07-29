@@ -54,7 +54,23 @@ namespace DDARoguelike
 
             if (projectilePool == null)
             {
+                projectilePool = FindFirstObjectByType<ProjectilePool>();
+            }
+
+            if (projectilePool == null)
+            {
                 Debug.LogError($"[{nameof(FixedShotEnemy)}] projectilePool is not assigned on {gameObject.name}.", this);
+            }
+        }
+
+        protected override void OnPreparedFromPool()
+        {
+            SetState(AI_State.Attack);
+            nextFireTime = 0.0f;
+
+            if (projectilePool == null)
+            {
+                projectilePool = FindFirstObjectByType<ProjectilePool>();
             }
         }
 

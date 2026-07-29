@@ -27,6 +27,12 @@ namespace DDARoguelike
             BeginMoving();
         }
 
+        protected override void OnPreparedFromPool()
+        {
+            SetState(AI_State.Roaming);
+            BeginMoving();
+        }
+
         private void FixedUpdate()
         {
             if (TryApplyKnockbackMovement())

@@ -20,7 +20,7 @@ namespace DDARoguelike
         };
 
         [SerializeField] private GameObject startRoomPrefab;
-        [SerializeField] private GameObject normalRoomPrefab;
+        [SerializeField] private GameObject[] normalRoomPrefabs;
         [SerializeField] private GameObject bossRoomPrefab;
         [SerializeField] private GameObject goldenRoomPrefab;
         [SerializeField] private GameObject lrNormalDoorPrefab;
@@ -37,6 +37,9 @@ namespace DDARoguelike
         [SerializeField] private bool useRandomSeed = true;
         [SerializeField] private RoomCamera roomCamera;
         [SerializeField] private Transform playerTransform;
+        [SerializeField] private EnemyPool enemyPool;
+
+        private readonly Queue<GameObject> normalRoomPrefabQueue = new Queue<GameObject>();
 
         public event Action<RoomController> StageStarted;
 
@@ -59,6 +62,7 @@ namespace DDARoguelike
             }
 
             ClearGeneratedRooms();
+            normalRoomPrefabQueue.Clear();
 
             int usedSeed = useRandomSeed ? Random.Range(int.MinValue, int.MaxValue) : seed;
             Random.InitState(usedSeed);
@@ -82,6 +86,7 @@ namespace DDARoguelike
                 return;
             }
 
+            BuildNormalRoomPrefabQueue();
             Dictionary<Vector2Int, RoomController> rooms = SpawnRooms(layout);
             SpawnRoomEdges(layout, rooms);
             PlacePlayerAndCamera(rooms);
@@ -107,10 +112,29 @@ namespace DDARoguelike
                 isValid = false;
             }
 
-            if (normalRoomPrefab == null)
+            if (normalRoomPrefabs == null || normalRoomPrefabs.Length == 0)
             {
-                Debug.LogError($"[{nameof(RoomGenerator)}] normalRoomPrefab is not assigned.", this);
+                Debug.LogError($"[{nameof(RoomGenerator)}] normalRoomPrefabs is not assigned.", this);
                 isValid = false;
+            }
+            else
+            {
+                bool hasValidNormalPrefab = false;
+
+                for (int i = 0; i < normalRoomPrefabs.Length; i++)
+                {
+                    if (normalRoomPrefabs[i] != null)
+                    {
+                        hasValidNormalPrefab = true;
+                        break;
+                    }
+                }
+
+                if (!hasValidNormalPrefab)
+                {
+                    Debug.LogError($"[{nameof(RoomGenerator)}] normalRoomPrefabs has no valid prefabs.", this);
+                    isValid = false;
+                }
             }
 
             if (bossRoomPrefab == null)
@@ -642,6 +666,13 @@ namespace DDARoguelike
             {
                 Debug.LogError($"[{nameof(RoomGenerator)}] {nameof(RoomCamera)} was not found.", this);
             }
+
+            if (enemyPool == null)
+            {
+                enemyPool = FindFirstObjectByType<EnemyPool>();
+            }
+
+            startRoom.TrySpawnEnemies(enemyPool);
         }
 
         private void SpawnNoRoomOnRoom(RoomController room, Vector2Int cell, Vector2Int direction)
@@ -779,6 +810,54 @@ namespace DDARoguelike
             return RoomType.Normal;
         }
 
+        private void BuildNormalRoomPrefabQueue()
+        {
+            normalRoomPrefabQueue.Clear();
+            EnqueueShuffledNormalRoomPrefabs();
+        }
+
+        private void EnqueueShuffledNormalRoomPrefabs()
+        {
+            List<GameObject> validPrefabs = new List<GameObject>();
+
+            for (int i = 0; i < normalRoomPrefabs.Length; i++)
+            {
+                if (normalRoomPrefabs[i] != null)
+                {
+                    validPrefabs.Add(normalRoomPrefabs[i]);
+                }
+            }
+
+            for (int i = validPrefabs.Count - 1; i > 0; i--)
+            {
+                int swapIndex = Random.Range(0, i + 1);
+                GameObject temp = validPrefabs[i];
+                validPrefabs[i] = validPrefabs[swapIndex];
+                validPrefabs[swapIndex] = temp;
+            }
+
+            for (int i = 0; i < validPrefabs.Count; i++)
+            {
+                normalRoomPrefabQueue.Enqueue(validPrefabs[i]);
+            }
+        }
+
+        private GameObject TakeNextNormalRoomPrefab()
+        {
+            if (normalRoomPrefabQueue.Count == 0)
+            {
+                EnqueueShuffledNormalRoomPrefabs();
+            }
+
+            if (normalRoomPrefabQueue.Count == 0)
+            {
+                Debug.LogError($"[{nameof(RoomGenerator)}] No normal room prefabs available.", this);
+                return null;
+            }
+
+            return normalRoomPrefabQueue.Dequeue();
+        }
+
         private GameObject GetRoomPrefab(RoomType roomType)
         {
             switch (roomType)
@@ -786,7 +865,7 @@ namespace DDARoguelike
                 case RoomType.Start:
                     return startRoomPrefab;
                 case RoomType.Normal:
-                    return normalRoomPrefab;
+                    return TakeNextNormalRoomPrefab();
                 case RoomType.Boss:
                     return bossRoomPrefab;
                 case RoomType.Golden:

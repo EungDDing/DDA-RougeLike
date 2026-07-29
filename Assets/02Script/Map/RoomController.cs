@@ -10,6 +10,8 @@ namespace DDARoguelike
 
         private int aliveEnemyCount;
         private bool isInitialized;
+        private bool hasSpawnPoints;
+        private bool hasSpawnedEnemies;
 
         public bool IsCleared { get; private set; }
         public RoomType RoomType { get; private set; }
@@ -26,9 +28,98 @@ namespace DDARoguelike
             isInitialized = true;
             RoomType = roomType;
 
+            EnemySpawnPoint[] spawnPoints = GetComponentsInChildren<EnemySpawnPoint>(true);
+            hasSpawnPoints = spawnPoints != null && spawnPoints.Length > 0;
+
+            if (hasSpawnPoints)
+            {
+                aliveEnemyCount = 0;
+                hasSpawnedEnemies = false;
+                SetCleared(false);
+                return;
+            }
+
             Enemy[] enemies = GetComponentsInChildren<Enemy>(true);
             aliveEnemyCount = enemies.Length;
             SetCleared(aliveEnemyCount == 0);
+        }
+
+        public void TrySpawnEnemies(EnemyPool enemyPool)
+        {
+            if (!isInitialized || hasSpawnedEnemies || IsCleared)
+            {
+                return;
+            }
+
+            if (!hasSpawnPoints)
+            {
+                return;
+            }
+
+            hasSpawnedEnemies = true;
+
+            if (enemyPool == null)
+            {
+                Debug.LogError($"[{nameof(RoomController)}] {nameof(EnemyPool)} is null when spawning enemies in {gameObject.name}.", this);
+                SetCleared(true);
+                return;
+            }
+
+            EnemySpawnPoint[] spawnPoints = GetComponentsInChildren<EnemySpawnPoint>(true);
+            int spawnedCount = 0;
+
+            for (int i = 0; i < spawnPoints.Length; i++)
+            {
+                EnemySpawnPoint spawnPoint = spawnPoints[i];
+
+                if (spawnPoint == null || !spawnPoint.HasEnemyPrefab)
+                {
+                    continue;
+                }
+
+                Enemy enemy = enemyPool.Get(spawnPoint.EnemyPrefab);
+
+                if (enemy == null)
+                {
+                    continue;
+                }
+
+                Vector3 prefabScale = spawnPoint.EnemyPrefab.transform.localScale;
+                enemy.transform.SetParent(transform, false);
+                enemy.transform.position = spawnPoint.transform.position;
+                enemy.transform.rotation = Quaternion.identity;
+                ApplyWorldScale(enemy.transform, prefabScale);
+                spawnedCount++;
+            }
+
+            aliveEnemyCount = spawnedCount;
+
+            if (aliveEnemyCount <= 0)
+            {
+                SetCleared(true);
+            }
+        }
+
+        private static void ApplyWorldScale(Transform target, Vector3 worldScale)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            Transform parent = target.parent;
+
+            if (parent == null)
+            {
+                target.localScale = worldScale;
+                return;
+            }
+
+            Vector3 parentScale = parent.lossyScale;
+            float scaleX = Mathf.Approximately(parentScale.x, 0.0f) ? worldScale.x : worldScale.x / parentScale.x;
+            float scaleY = Mathf.Approximately(parentScale.y, 0.0f) ? worldScale.y : worldScale.y / parentScale.y;
+            float scaleZ = Mathf.Approximately(parentScale.z, 0.0f) ? worldScale.z : worldScale.z / parentScale.z;
+            target.localScale = new Vector3(scaleX, scaleY, scaleZ);
         }
 
         public void NotifyEnemyDied()

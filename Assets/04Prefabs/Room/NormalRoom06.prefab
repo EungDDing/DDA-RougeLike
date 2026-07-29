@@ -792,6 +792,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2408207651117018980}
+  - component: {fileID: 9100000000000000014}
   m_Layer: 0
   m_Name: EnemyPosition
   m_TagString: Untagged
@@ -814,6 +815,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7237337539558735582}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9100000000000000014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3882559237406019003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2f3a4b5c6d708192a3b4c5d6e7f8091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DDARoguelike.EnemySpawnPoint
+  enemyPrefab: {fileID: 2162463690627815546, guid: f1a2b3c4d5e6f708192a3b4c5d6e7f90, type: 3}
 --- !u!1 &4924677595071750135
 GameObject:
   m_ObjectHideFlags: 0
@@ -992,6 +1006,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 958889404848404503}
+  - component: {fileID: 9100000000000000015}
   m_Layer: 0
   m_Name: EnemyPosition (1)
   m_TagString: Untagged
@@ -1014,6 +1029,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7237337539558735582}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9100000000000000015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5698697590317111695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2f3a4b5c6d708192a3b4c5d6e7f8091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DDARoguelike.EnemySpawnPoint
+  enemyPrefab: {fileID: 2162463690627815546, guid: f1a2b3c4d5e6f708192a3b4c5d6e7f90, type: 3}
 --- !u!1 &6845172826713311251
 GameObject:
   m_ObjectHideFlags: 0

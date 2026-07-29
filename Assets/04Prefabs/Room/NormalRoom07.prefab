@@ -238,6 +238,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5628524104612824835}
+  - component: {fileID: 9100000000000000016}
   m_Layer: 0
   m_Name: EnemyPosition (3)
   m_TagString: Untagged
@@ -260,6 +261,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1568750215595279007}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9100000000000000016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911794500672999004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2f3a4b5c6d708192a3b4c5d6e7f8091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DDARoguelike.EnemySpawnPoint
+  enemyPrefab: {fileID: 108731679945348760, guid: 9927d86aeee8777478415aceb9fc0f4c, type: 3}
 --- !u!1 &2122727067683424786
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,6 +350,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5507457620993237879}
+  - component: {fileID: 9100000000000000017}
   m_Layer: 0
   m_Name: EnemyPosition (1)
   m_TagString: Untagged
@@ -358,6 +373,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1568750215595279007}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9100000000000000017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2533164743101318616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2f3a4b5c6d708192a3b4c5d6e7f8091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DDARoguelike.EnemySpawnPoint
+  enemyPrefab: {fileID: 108731679945348760, guid: 9927d86aeee8777478415aceb9fc0f4c, type: 3}
 --- !u!1 &2561235164768860492
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,6 +395,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5306208781057362004}
+  - component: {fileID: 9100000000000000018}
   m_Layer: 0
   m_Name: EnemyPosition
   m_TagString: Untagged
@@ -389,6 +418,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1568750215595279007}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9100000000000000018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2561235164768860492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2f3a4b5c6d708192a3b4c5d6e7f8091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DDARoguelike.EnemySpawnPoint
+  enemyPrefab: {fileID: 108731679945348760, guid: 9927d86aeee8777478415aceb9fc0f4c, type: 3}
 --- !u!1 &2620348325608376157
 GameObject:
   m_ObjectHideFlags: 0
@@ -806,6 +848,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4384887673942562476}
+  - component: {fileID: 9100000000000000019}
   m_Layer: 0
   m_Name: EnemyPosition (2)
   m_TagString: Untagged
@@ -828,6 +871,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1568750215595279007}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9100000000000000019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6140325040884234668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2f3a4b5c6d708192a3b4c5d6e7f8091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DDARoguelike.EnemySpawnPoint
+  enemyPrefab: {fileID: 108731679945348760, guid: 9927d86aeee8777478415aceb9fc0f4c, type: 3}
 --- !u!1 &6237540422742345605
 GameObject:
   m_ObjectHideFlags: 0
