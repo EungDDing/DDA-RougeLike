@@ -44,7 +44,7 @@ namespace DDARoguelike
                 return;
             }
 
-            if (!keyboard.spaceKey.wasPressedThisFrame)
+            if (!keyboard.vKey.wasPressedThisFrame)
             {
                 return;
             }

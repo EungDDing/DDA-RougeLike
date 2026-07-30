@@ -118,7 +118,7 @@ TextureImporter:
         serializedVersion: 2
         x: 98
         y: 230
-        width: 1928
+        width: 233
         height: 278
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -130,6 +130,28 @@ TextureImporter:
       bones: []
       spriteID: 42e250951738653d0800000000000000
       internalID: -3218240360861585884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShieldBar_1
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 234
+        width: 1712
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2414d3864d23de6479617d276ef59395
+      internalID: 144880459
       vertices: []
       indices: 
       edges: []
@@ -149,6 +171,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       ShieldBar_0: -3218240360861585884
+      ShieldBar_1: 144880459
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
