@@ -55,11 +55,19 @@ namespace DDARoguelike
             ignoreTag = launchIgnoreTag;
             spawnPosition = transform.position;
             isActive = true;
+            ApplyFacingRotation(direction);
 
             if (rigidbody2D != null)
             {
                 rigidbody2D.linearVelocity = direction * speed;
             }
+        }
+
+        private void ApplyFacingRotation(Vector2 travelDirection)
+        {
+            // Sprite forward is down (-Y), so identity faces Vector2.down.
+            float angleDegrees = Mathf.Atan2(travelDirection.y, travelDirection.x) * Mathf.Rad2Deg + 90.0f;
+            transform.rotation = Quaternion.Euler(0.0f, 0.0f, angleDegrees);
         }
 
         public float Damage => damage;
