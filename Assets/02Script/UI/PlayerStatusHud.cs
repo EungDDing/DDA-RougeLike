@@ -5,7 +5,7 @@ namespace DDARoguelike
 {
     public class PlayerStatusHud : MonoBehaviour
     {
-        private const int StatRowCount = 6;
+        private const int StatRowCount = 11;
         private const float RowHeight = 44.0f;
         private const float IconSize = 40.0f;
         private const float Padding = 8.0f;
@@ -14,14 +14,21 @@ namespace DDARoguelike
 
         [SerializeField] private PlayerAttack playerAttack;
         [SerializeField] private PlayerMove playerMove;
+        [SerializeField] private PlayerHealth playerHealth;
+        [SerializeField] private PlayerSkill playerSkill;
         [SerializeField] private RectTransform statusRoot;
 
-        [SerializeField] private Sprite attackIcon;
         [SerializeField] private Sprite moveSpeedIcon;
-        [SerializeField] private Sprite fireRateIcon;
+        [SerializeField] private Sprite attackIcon;
+        [SerializeField] private Sprite critChanceIcon;
+        [SerializeField] private Sprite critDamageIcon;
         [SerializeField] private Sprite rangeIcon;
+        [SerializeField] private Sprite fireRateIcon;
         [SerializeField] private Sprite shotSpeedIcon;
         [SerializeField] private Sprite projectileCountIcon;
+        [SerializeField] private Sprite skillDamageIcon;
+        [SerializeField] private Sprite skillProjectileCountIcon;
+        [SerializeField] private Sprite defenseIcon;
 
         [SerializeField] private int fontSize = 22;
         [SerializeField] private Color valueColor = Color.white;
@@ -61,6 +68,16 @@ namespace DDARoguelike
                 playerMove.StatsChanged += Refresh;
             }
 
+            if (playerHealth != null)
+            {
+                playerHealth.StatsChanged += Refresh;
+            }
+
+            if (playerSkill != null)
+            {
+                playerSkill.StatsChanged += Refresh;
+            }
+
             Refresh();
         }
 
@@ -75,6 +92,16 @@ namespace DDARoguelike
             {
                 playerMove.StatsChanged -= Refresh;
             }
+
+            if (playerHealth != null)
+            {
+                playerHealth.StatsChanged -= Refresh;
+            }
+
+            if (playerSkill != null)
+            {
+                playerSkill.StatsChanged -= Refresh;
+            }
         }
 
         private void Start()
@@ -86,7 +113,10 @@ namespace DDARoguelike
         {
             GameObject playerObject = null;
 
-            if (playerAttack == null || playerMove == null)
+            if (playerAttack == null
+                || playerMove == null
+                || playerHealth == null
+                || playerSkill == null)
             {
                 playerObject = GameObject.FindGameObjectWithTag("Player");
             }
@@ -101,6 +131,16 @@ namespace DDARoguelike
                 playerMove = playerObject.GetComponent<PlayerMove>();
             }
 
+            if (playerHealth == null && playerObject != null)
+            {
+                playerHealth = playerObject.GetComponent<PlayerHealth>();
+            }
+
+            if (playerSkill == null && playerObject != null)
+            {
+                playerSkill = playerObject.GetComponent<PlayerSkill>();
+            }
+
             if (playerAttack == null)
             {
                 Debug.LogError($"[{nameof(PlayerStatusHud)}] {nameof(PlayerAttack)} is not assigned on {gameObject.name}.", this);
@@ -109,6 +149,16 @@ namespace DDARoguelike
             if (playerMove == null)
             {
                 Debug.LogError($"[{nameof(PlayerStatusHud)}] {nameof(PlayerMove)} is not assigned on {gameObject.name}.", this);
+            }
+
+            if (playerHealth == null)
+            {
+                Debug.LogError($"[{nameof(PlayerStatusHud)}] {nameof(PlayerHealth)} is not assigned on {gameObject.name}.", this);
+            }
+
+            if (playerSkill == null)
+            {
+                Debug.LogError($"[{nameof(PlayerStatusHud)}] {nameof(PlayerSkill)} is not assigned on {gameObject.name}.", this);
             }
         }
 
@@ -143,12 +193,17 @@ namespace DDARoguelike
 
             Sprite[] icons = new Sprite[]
             {
-                attackIcon,
                 moveSpeedIcon,
-                fireRateIcon,
+                attackIcon,
+                critChanceIcon,
+                critDamageIcon,
                 rangeIcon,
+                fireRateIcon,
                 shotSpeedIcon,
                 projectileCountIcon,
+                skillDamageIcon,
+                skillProjectileCountIcon,
+                defenseIcon,
             };
 
             for (int i = 0; i < StatRowCount; i++)
@@ -240,24 +295,43 @@ namespace DDARoguelike
                 return;
             }
 
-            if (playerAttack != null)
-            {
-                valueTexts[0].text = FormatFloat(playerAttack.AttackPower);
-                valueTexts[2].text = FormatFloat(playerAttack.FireRate);
-                valueTexts[3].text = FormatFloat(playerAttack.AttackRange);
-                valueTexts[4].text = FormatFloat(playerAttack.ShotSpeed);
-                valueTexts[5].text = playerAttack.ProjectileCount.ToString();
-            }
-
             if (playerMove != null)
             {
-                valueTexts[1].text = FormatFloat(playerMove.MoveSpeed);
+                valueTexts[0].text = FormatFloat(playerMove.MoveSpeed);
+            }
+
+            if (playerAttack != null)
+            {
+                valueTexts[1].text = FormatFloat(playerAttack.AttackPower);
+                valueTexts[2].text = FormatPercent(playerAttack.CritChance);
+                valueTexts[3].text = FormatPercent(playerAttack.CritDamage);
+                valueTexts[4].text = FormatFloat(playerAttack.AttackRange);
+                valueTexts[5].text = FormatFloat(playerAttack.FireRate);
+                valueTexts[6].text = FormatFloat(playerAttack.ShotSpeed);
+                valueTexts[7].text = playerAttack.ProjectileCount.ToString();
+            }
+
+            if (playerSkill != null)
+            {
+                valueTexts[8].text = FormatFloat(playerSkill.SkillDamage);
+                valueTexts[9].text = playerSkill.SkillProjectileCount.ToString();
+            }
+
+            if (playerHealth != null)
+            {
+                valueTexts[10].text = FormatFloat(playerHealth.Defense);
             }
         }
 
         private static string FormatFloat(float value)
         {
             return value.ToString("F2");
+        }
+
+        private static string FormatPercent(float ratio)
+        {
+            int percent = Mathf.RoundToInt(ratio * 100.0f);
+            return $"{percent}%";
         }
     }
 }

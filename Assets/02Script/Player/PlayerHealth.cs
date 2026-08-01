@@ -6,8 +6,10 @@ namespace DDARoguelike
     public class PlayerHealth : MonoBehaviour, IDamaged
     {
         private const int MaxTotalDefense = 24;
+        private const float DefenseSoftCapConstant = 75.0f;
 
         [SerializeField] private int maxHp = 6;
+        [SerializeField] private float defense = 0.0f;
 
         private int currentHp;
         private int shield;
@@ -16,8 +18,10 @@ namespace DDARoguelike
         public int CurrentHp => currentHp;
         public int MaxHp => maxHp;
         public int Shield => shield;
+        public float Defense => defense;
 
         public event Action HealthChanged;
+        public event Action StatsChanged;
         public event Action<int, string> Damaged;
 
         public bool CanHeal()
@@ -101,6 +105,18 @@ namespace DDARoguelike
             NotifyHealthChanged();
         }
 
+        public void AddDefense(float amount)
+        {
+            if (amount == 0.0f)
+            {
+                return;
+            }
+
+            defense = Mathf.Max(0.0f, defense + amount);
+            Debug.Log($"Defense: {defense}");
+            NotifyStatsChanged();
+        }
+
         public void TakeDamage(int damage, string attackerName)
         {
             if (damage <= 0)
@@ -108,8 +124,9 @@ namespace DDARoguelike
                 return;
             }
 
+            int mitigatedDamage = ApplyDefense(damage);
             int totalDefenseBeforeDamage = currentHp + shield;
-            int remainingDamage = damage;
+            int remainingDamage = mitigatedDamage;
 
             if (shield > 0)
             {
@@ -124,7 +141,7 @@ namespace DDARoguelike
             }
 
             Debug.Log(
-                $"{attackerName} dealt {damage} damage to {gameObject.name}. Remaining Shield: {shield}, Remaining HP: {currentHp}");
+                $"{attackerName} dealt {mitigatedDamage} damage (raw {damage}) to {gameObject.name}. Remaining Shield: {shield}, Remaining HP: {currentHp}");
 
             int appliedDamage = totalDefenseBeforeDamage - currentHp - shield;
 
@@ -136,11 +153,26 @@ namespace DDARoguelike
             NotifyHealthChanged();
         }
 
+        private int ApplyDefense(int rawDamage)
+        {
+            float reduced = rawDamage * DefenseSoftCapConstant / (DefenseSoftCapConstant + defense);
+            int finalDamage = Mathf.RoundToInt(reduced);
+            return Mathf.Max(1, finalDamage);
+        }
+
         private void NotifyHealthChanged()
         {
             if (HealthChanged != null)
             {
                 HealthChanged.Invoke();
+            }
+        }
+
+        private void NotifyStatsChanged()
+        {
+            if (StatsChanged != null)
+            {
+                StatsChanged.Invoke();
             }
         }
 
