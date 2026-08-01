@@ -7,12 +7,16 @@ namespace DDARoguelike
     public abstract class PlayerSkill : MonoBehaviour
     {
         [SerializeField] private float cooldownSeconds = 3.0f;
+        [SerializeField] private float skillDamage = 5.0f;
+        [SerializeField] private int skillProjectileCount = 1;
 
         private float nextReadyTime;
         private Vector2 lastAimDirection = Vector2.right;
         private bool wasOnCooldown;
 
         public float CooldownDuration => Mathf.Max(0.0f, cooldownSeconds);
+        public float SkillDamage => skillDamage;
+        public int SkillProjectileCount => skillProjectileCount;
 
         public float RemainingCooldown
         {
@@ -27,6 +31,7 @@ namespace DDARoguelike
 
         public event Action CooldownStarted;
         public event Action CooldownReady;
+        public event Action StatsChanged;
 
         protected Vector2 LastAimDirection => lastAimDirection;
 
@@ -48,6 +53,30 @@ namespace DDARoguelike
             }
 
             TryActivate();
+        }
+
+        public void AddSkillDamage(float amount)
+        {
+            if (amount == 0.0f)
+            {
+                return;
+            }
+
+            skillDamage = Mathf.Max(0.0f, skillDamage + amount);
+            Debug.Log($"SkillDamage: {skillDamage}");
+            NotifyStatsChanged();
+        }
+
+        public void AddSkillProjectileCount(int amount)
+        {
+            if (amount == 0)
+            {
+                return;
+            }
+
+            skillProjectileCount = Mathf.Max(1, skillProjectileCount + amount);
+            Debug.Log($"SkillProjectileCount: {skillProjectileCount}");
+            NotifyStatsChanged();
         }
 
         protected bool TryActivate()
@@ -85,6 +114,14 @@ namespace DDARoguelike
         }
 
         protected abstract bool ActivateSkill();
+
+        protected void NotifyStatsChanged()
+        {
+            if (StatsChanged != null)
+            {
+                StatsChanged.Invoke();
+            }
+        }
 
         private void UpdateCooldownReadyEvent()
         {

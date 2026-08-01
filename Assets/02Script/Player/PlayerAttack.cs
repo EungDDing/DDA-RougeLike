@@ -11,6 +11,8 @@ namespace DDARoguelike
         [SerializeField] private float attackRange = 6.0f;
         [SerializeField] private int projectileCount = 1;
         [SerializeField] private float shotSpeed = 3.0f;
+        [SerializeField] private float critChance = 0.0f;
+        [SerializeField] private float critDamage = 1.0f;
         [SerializeField] private float multiShotAngleDegrees = 15.0f;
         [SerializeField] private Transform shotPosition;
         [SerializeField] private GameObject playerProjectilePrefab;
@@ -23,6 +25,8 @@ namespace DDARoguelike
         public float AttackRange => attackRange;
         public int ProjectileCount => projectileCount;
         public float ShotSpeed => shotSpeed;
+        public float CritChance => critChance;
+        public float CritDamage => critDamage;
 
         public event Action StatsChanged;
         public event Action<int> ShotsFired;
@@ -113,6 +117,30 @@ namespace DDARoguelike
             NotifyStatsChanged();
         }
 
+        public void AddCritChance(float amount)
+        {
+            if (amount == 0.0f)
+            {
+                return;
+            }
+
+            critChance = Mathf.Clamp01(critChance + amount);
+            Debug.Log($"CritChance: {critChance}");
+            NotifyStatsChanged();
+        }
+
+        public void AddCritDamage(float amount)
+        {
+            if (amount == 0.0f)
+            {
+                return;
+            }
+
+            critDamage = Mathf.Max(0.0f, critDamage + amount);
+            Debug.Log($"CritDamage: {critDamage}");
+            NotifyStatsChanged();
+        }
+
         private void NotifyStatsChanged()
         {
             if (StatsChanged != null)
@@ -136,9 +164,10 @@ namespace DDARoguelike
 
                 float angleOffset = (i - (projectileCount - 1) * 0.5f) * multiShotAngleDegrees;
                 Vector2 shotDirection = RotateDirection(direction, angleOffset);
+                float shotDamage = ResolveShotDamage();
 
                 projectile.transform.position = shotPosition.position;
-                projectile.Launch(shotDirection, shotSpeed, attackRange, attackPower, projectilePool, "Player", "Player");
+                projectile.Launch(shotDirection, shotSpeed, attackRange, shotDamage, projectilePool, "Player", "Player");
                 firedProjectileCount++;
             }
 
@@ -146,6 +175,16 @@ namespace DDARoguelike
             {
                 ShotsFired?.Invoke(firedProjectileCount);
             }
+        }
+
+        private float ResolveShotDamage()
+        {
+            if (critChance > 0.0f && UnityEngine.Random.value < critChance)
+            {
+                return attackPower * critDamage;
+            }
+
+            return attackPower;
         }
 
         private static Vector2 RotateDirection(Vector2 direction, float angleDegrees)

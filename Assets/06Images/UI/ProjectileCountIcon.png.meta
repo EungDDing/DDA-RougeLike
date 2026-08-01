@@ -5,12 +5,6 @@ TextureImporter:
   - first:
       213: -8771334760909315114
     second: ProjectileCountIcon_0
-  - first:
-      213: 4872348944870960583
-    second: ProjectileCountIcon_1
-  - first:
-      213: 1513466022931592977
-    second: ProjectileCountIcon_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -122,10 +116,10 @@ TextureImporter:
       name: ProjectileCountIcon_0
       rect:
         serializedVersion: 2
-        x: 532
-        y: 524
-        width: 180
-        height: 180
+        x: 370
+        y: 388
+        width: 513
+        height: 516
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -144,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 662f76d3d4537bf40b573b197754ed65
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -155,8 +149,6 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       ProjectileCountIcon_0: -8771334760909315114
-      ProjectileCountIcon_1: 4872348944870960583
-      ProjectileCountIcon_2: 1513466022931592977
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

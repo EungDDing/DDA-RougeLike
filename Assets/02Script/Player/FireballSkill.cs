@@ -12,9 +12,9 @@ namespace DDARoguelike
         [SerializeField] private ProjectilePool projectilePool;
         [SerializeField] private Transform shotPosition;
         [SerializeField] private float detectRadius = 8.0f;
-        [SerializeField] private float damage = 5.0f;
         [SerializeField] private float speed = 6.0f;
         [SerializeField] private float maxRange = 10.0f;
+        [SerializeField] private float multiShotAngleDegrees = 15.0f;
 
         private readonly Collider2D[] overlapBuffer = new Collider2D[OverlapBufferSize];
 
@@ -44,23 +44,34 @@ namespace DDARoguelike
             }
 
             Vector2 fireDirection = ResolveFireDirection();
-            Projectile projectile = projectilePool.Get(fireballPrefab);
+            int shotCount = SkillProjectileCount;
+            int firedCount = 0;
 
-            if (projectile == null)
+            for (int i = 0; i < shotCount; i++)
             {
-                return false;
+                Projectile projectile = projectilePool.Get(fireballPrefab);
+
+                if (projectile == null)
+                {
+                    continue;
+                }
+
+                float angleOffset = (i - (shotCount - 1) * 0.5f) * multiShotAngleDegrees;
+                Vector2 shotDirection = RotateDirection(fireDirection, angleOffset);
+
+                projectile.transform.position = shotPosition.position;
+                projectile.Launch(
+                    shotDirection,
+                    speed,
+                    maxRange,
+                    SkillDamage,
+                    projectilePool,
+                    PlayerAttackerName,
+                    PlayerIgnoreTag);
+                firedCount++;
             }
 
-            projectile.transform.position = shotPosition.position;
-            projectile.Launch(
-                fireDirection,
-                speed,
-                maxRange,
-                damage,
-                projectilePool,
-                PlayerAttackerName,
-                PlayerIgnoreTag);
-            return true;
+            return firedCount > 0;
         }
 
         private Vector2 ResolveFireDirection()
@@ -132,6 +143,17 @@ namespace DDARoguelike
 
             direction = nearestDirection;
             return true;
+        }
+
+        private static Vector2 RotateDirection(Vector2 direction, float angleDegrees)
+        {
+            float radians = angleDegrees * Mathf.Deg2Rad;
+            float cos = Mathf.Cos(radians);
+            float sin = Mathf.Sin(radians);
+
+            return new Vector2(
+                direction.x * cos - direction.y * sin,
+                direction.x * sin + direction.y * cos);
         }
     }
 }

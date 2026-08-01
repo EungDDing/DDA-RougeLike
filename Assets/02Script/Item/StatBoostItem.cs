@@ -68,13 +68,20 @@ namespace DDARoguelike
                 case PlayerStatType.FireRate:
                 case PlayerStatType.ShotSpeed:
                 case PlayerStatType.ProjectileCount:
+                case PlayerStatType.CritChance:
+                case PlayerStatType.CritDamage:
                     ApplyAttackStat(collector, entry);
                     break;
                 case PlayerStatType.MoveSpeed:
                     ApplyMoveStat(collector, entry);
                     break;
                 case PlayerStatType.MaxHp:
+                case PlayerStatType.Defense:
                     ApplyHealthStat(collector, entry);
+                    break;
+                case PlayerStatType.SkillProjectileCount:
+                case PlayerStatType.SkillDamage:
+                    ApplySkillStat(collector, entry);
                     break;
                 default:
                     Debug.LogWarning($"[{nameof(StatBoostItem)}] Unsupported stat type {entry.StatType}.", this);
@@ -114,6 +121,12 @@ namespace DDARoguelike
                 case PlayerStatType.ProjectileCount:
                     playerAttack.AddProjectileCount(Mathf.RoundToInt(entry.Amount));
                     break;
+                case PlayerStatType.CritChance:
+                    playerAttack.AddCritChance(entry.Amount);
+                    break;
+                case PlayerStatType.CritDamage:
+                    playerAttack.AddCritDamage(entry.Amount);
+                    break;
             }
         }
 
@@ -150,7 +163,41 @@ namespace DDARoguelike
                 return;
             }
 
-            playerHealth.AddMaxHp(Mathf.RoundToInt(entry.Amount));
+            switch (entry.StatType)
+            {
+                case PlayerStatType.MaxHp:
+                    playerHealth.AddMaxHp(Mathf.RoundToInt(entry.Amount));
+                    break;
+                case PlayerStatType.Defense:
+                    playerHealth.AddDefense(entry.Amount);
+                    break;
+            }
+        }
+
+        private void ApplySkillStat(GameObject collector, StatBoostEntry entry)
+        {
+            PlayerSkill playerSkill = collector.GetComponent<PlayerSkill>();
+
+            if (playerSkill == null)
+            {
+                playerSkill = collector.GetComponentInParent<PlayerSkill>();
+            }
+
+            if (playerSkill == null)
+            {
+                Debug.LogWarning($"[{nameof(StatBoostItem)}] {nameof(PlayerSkill)} was not found on collector.", this);
+                return;
+            }
+
+            switch (entry.StatType)
+            {
+                case PlayerStatType.SkillProjectileCount:
+                    playerSkill.AddSkillProjectileCount(Mathf.RoundToInt(entry.Amount));
+                    break;
+                case PlayerStatType.SkillDamage:
+                    playerSkill.AddSkillDamage(entry.Amount);
+                    break;
+            }
         }
     }
 }
