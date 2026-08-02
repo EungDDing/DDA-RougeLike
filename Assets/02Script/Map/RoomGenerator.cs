@@ -677,6 +677,21 @@ namespace DDARoguelike
             }
 
             startRoom.TrySpawnEnemies(enemyPool);
+
+            if (playerTransform != null)
+            {
+                PlayerItemInventory itemInventory = playerTransform.GetComponent<PlayerItemInventory>();
+
+                if (itemInventory == null)
+                {
+                    itemInventory = playerTransform.GetComponentInParent<PlayerItemInventory>();
+                }
+
+                if (itemInventory != null)
+                {
+                    itemInventory.NotifyRoomEntered();
+                }
+            }
         }
 
         private void SpawnNoRoomOnRoom(RoomController room, Vector2Int cell, Vector2Int direction)

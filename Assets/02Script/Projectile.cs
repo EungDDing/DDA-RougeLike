@@ -18,6 +18,7 @@ namespace DDARoguelike
         private GameObject sourcePrefab;
         private string attackerName;
         private string ignoreTag;
+        private PlayerItemInventory ownerItemInventory;
         private bool isActive;
 
         public GameObject SourcePrefab => sourcePrefab;
@@ -53,6 +54,7 @@ namespace DDARoguelike
             damage = launchDamage;
             attackerName = launchAttackerName;
             ignoreTag = launchIgnoreTag;
+            ownerItemInventory = null;
             spawnPosition = transform.position;
             isActive = true;
             ApplyFacingRotation(direction);
@@ -68,6 +70,11 @@ namespace DDARoguelike
             // Sprite forward is down (-Y), so identity faces Vector2.down.
             float angleDegrees = Mathf.Atan2(travelDirection.y, travelDirection.x) * Mathf.Rad2Deg + 90.0f;
             transform.rotation = Quaternion.Euler(0.0f, 0.0f, angleDegrees);
+        }
+
+        public void SetOwnerItemInventory(PlayerItemInventory inventory)
+        {
+            ownerItemInventory = inventory;
         }
 
         public float Damage => damage;
@@ -136,7 +143,13 @@ namespace DDARoguelike
 
             if (damaged != null)
             {
-                damaged.TakeDamage(Mathf.RoundToInt(damage), attackerName);
+                int appliedDamage = Mathf.RoundToInt(damage);
+                damaged.TakeDamage(appliedDamage, attackerName);
+
+                if (ownerItemInventory != null && appliedDamage > 0)
+                {
+                    ownerItemInventory.NotifyDamageDealt(appliedDamage);
+                }
             }
         }
 

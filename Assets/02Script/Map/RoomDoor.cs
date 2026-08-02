@@ -197,6 +197,18 @@ namespace DDARoguelike
                 targetRoom.TrySpawnEnemies(enemyPool);
             }
 
+            PlayerItemInventory itemInventory = playerTransform.GetComponent<PlayerItemInventory>();
+
+            if (itemInventory == null)
+            {
+                itemInventory = playerTransform.GetComponentInParent<PlayerItemInventory>();
+            }
+
+            if (itemInventory != null)
+            {
+                itemInventory.NotifyRoomEntered();
+            }
+
             destinationDoor.SuppressUntilExit();
             StartCoroutine(FinishTransition(playerMove));
         }

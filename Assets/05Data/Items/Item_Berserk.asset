@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d11f9b03ca46954ca56d13740d6b380, type: 3}
+  m_Name: Item_Berserk
+  m_EditorClassIdentifier: Assembly-CSharp::DDARoguelike.ItemDefinition
+  itemId: 00
+  displayName: "\uC545\uB9C8\uC758 \uD53C"
+  description: "\uCCB4\uB825\uC774 10 \uAC10\uC18C\uD558\uB294 \uB300\uC2E0 \uD53C\uD574\uB7C9\uC774
+    10% \uC99D\uAC00\uD569\uB2C8\uB2E4"
+  icon: {fileID: -3275529500549950213, guid: 7e9abc2156b852740882274595430fe0, type: 3}
+  effects:
+  - effectType: 0
+    statType: 0
+    value: 0.1
+  - effectType: 1
+    statType: 2
+    value: -10

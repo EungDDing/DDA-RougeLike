@@ -85,13 +85,21 @@ namespace DDARoguelike
 
         public void AddMaxHp(int amount)
         {
-            if (amount <= 0)
+            if (amount == 0)
             {
                 return;
             }
 
-            maxHp += amount;
-            currentHp += amount;
+            maxHp = Mathf.Max(1, maxHp + amount);
+
+            if (amount > 0)
+            {
+                currentHp += amount;
+            }
+            else
+            {
+                currentHp = Mathf.Min(currentHp, maxHp);
+            }
 
             int maxShield = MaxTotalDefense - maxHp;
 
@@ -137,6 +145,18 @@ namespace DDARoguelike
             }
 
             defense = Mathf.Max(0.0f, defense + amount);
+            Debug.Log($"Defense: {defense}");
+            NotifyStatsChanged();
+        }
+
+        public void MultiplyDefense(float factor)
+        {
+            if (factor == 1.0f)
+            {
+                return;
+            }
+
+            defense = Mathf.Max(0.0f, defense * factor);
             Debug.Log($"Defense: {defense}");
             NotifyStatsChanged();
         }

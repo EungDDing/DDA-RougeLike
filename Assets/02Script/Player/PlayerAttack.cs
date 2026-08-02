@@ -18,6 +18,7 @@ namespace DDARoguelike
         [SerializeField] private GameObject playerProjectilePrefab;
         [SerializeField] private ProjectilePool projectilePool;
 
+        private PlayerItemInventory itemInventory;
         private float nextFireTime;
         private bool isCombatInputEnabled = true;
 
@@ -48,6 +49,8 @@ namespace DDARoguelike
             {
                 Debug.LogError($"[{nameof(PlayerAttack)}] projectilePool is not assigned on {gameObject.name}.", this);
             }
+
+            itemInventory = GetComponent<PlayerItemInventory>();
         }
 
         public void SetCombatInputEnabled(bool isEnabled)
@@ -115,6 +118,30 @@ namespace DDARoguelike
 
             critDamage = Mathf.Max(0.0f, critDamage * factor);
             Debug.Log($"CritDamage: {critDamage}");
+            NotifyStatsChanged();
+        }
+
+        public void MultiplyFireRate(float factor)
+        {
+            if (factor == 1.0f)
+            {
+                return;
+            }
+
+            fireRate = Mathf.Max(0.0f, fireRate * factor);
+            Debug.Log($"FireRate: {fireRate}");
+            NotifyStatsChanged();
+        }
+
+        public void MultiplyCritChance(float factor)
+        {
+            if (factor == 1.0f)
+            {
+                return;
+            }
+
+            critChance = Mathf.Clamp01(critChance * factor);
+            Debug.Log($"CritChance: {critChance}");
             NotifyStatsChanged();
         }
 
@@ -242,6 +269,7 @@ namespace DDARoguelike
 
                 projectile.transform.position = shotPosition.position;
                 projectile.Launch(shotDirection, shotSpeed, attackRange, shotDamage, projectilePool, "Player", "Player");
+                projectile.SetOwnerItemInventory(itemInventory);
                 firedProjectileCount++;
             }
 

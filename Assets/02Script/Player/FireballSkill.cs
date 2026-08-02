@@ -19,6 +19,7 @@ namespace DDARoguelike
         [SerializeField] private float multiShotAngleDegrees = 15.0f;
 
         private readonly Collider2D[] overlapBuffer = new Collider2D[OverlapBufferSize];
+        private PlayerItemInventory itemInventory;
 
         private void Awake()
         {
@@ -36,6 +37,8 @@ namespace DDARoguelike
             {
                 shotPosition = transform;
             }
+
+            itemInventory = GetComponent<PlayerItemInventory>();
         }
 
         protected override bool ActivateSkill()
@@ -70,6 +73,7 @@ namespace DDARoguelike
                     projectilePool,
                     PlayerAttackerName,
                     PlayerIgnoreTag);
+                projectile.SetOwnerItemInventory(itemInventory);
                 firedCount++;
             }
 
