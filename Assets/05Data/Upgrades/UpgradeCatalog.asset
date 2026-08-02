@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a11c01de0002aaaabbbbccccddddeee2, type: 3}
+  m_Name: UpgradeCatalog
+  m_EditorClassIdentifier: 
+  definitions:
+  - {fileID: 11400000, guid: c11c01de0001aaaabbbbccccdddde001, type: 2}
+  - {fileID: 11400000, guid: c11c01de0002aaaabbbbccccdddde002, type: 2}
+  - {fileID: 11400000, guid: c11c01de0003aaaabbbbccccdddde003, type: 2}
+  - {fileID: 11400000, guid: c11c01de0004aaaabbbbccccdddde004, type: 2}
+  - {fileID: 11400000, guid: c11c01de0005aaaabbbbccccdddde005, type: 2}
+  - {fileID: 11400000, guid: c11c01de0006aaaabbbbccccdddde006, type: 2}
+  - {fileID: 11400000, guid: c11c01de0007aaaabbbbccccdddde007, type: 2}
+  - {fileID: 11400000, guid: c11c01de0008aaaabbbbccccdddde008, type: 2}
+  - {fileID: 11400000, guid: c11c01de0009aaaabbbbccccdddde009, type: 2}
+  - {fileID: 11400000, guid: c11c01de0010aaaabbbbccccdddde010, type: 2}
+  - {fileID: 11400000, guid: c11c01de0011aaaabbbbccccdddde011, type: 2}
+  - {fileID: 11400000, guid: c11c01de0012aaaabbbbccccdddde012, type: 2}
+  - {fileID: 11400000, guid: c11c01de0013aaaabbbbccccdddde013, type: 2}
+  choiceCount: 3
+  attackCategoryWeight: 0.4
+  skillCategoryWeight: 0.3
+  survivalCategoryWeight: 0.3
+  grade1Weight: 0.55
+  grade2Weight: 0.3
+  grade3Weight: 0.12
+  grade4Weight: 0.03
+  attackCategoryImage: {fileID: 6890507083052327065, guid: 50ec8b1d536ca8144afbfb94f76d1eaa, type: 3}
+  survivalCategoryImage: {fileID: -2132889577529298831, guid: 4115191c5439d1e4e9b95363e7892f58, type: 3}
+  skillCategoryImage: {fileID: 9005380598398219244, guid: 152dfb669ccd981458b99df41466c9d6, type: 3}
+  grade1DisplayName: common
+  grade2DisplayName: rare
+  grade3DisplayName: unique
+  grade4DisplayName: legend
+  grade1BackgroundColor: {r: 0.019708123, g: 0.4811321, b: 0, a: 1}
+  grade2BackgroundColor: {r: 0.21692497, g: 0.21115166, b: 0.6132076, a: 1}
+  grade3BackgroundColor: {r: 0.7169812, g: 0.10484158, b: 0.5842508, a: 1}
+  grade4BackgroundColor: {r: 1, g: 0.90285873, b: 0.3160377, a: 1}
+  grade1TextColor: {r: 0.03835665, g: 0.8490566, b: 0.0040049935, a: 1}
+  grade2TextColor: {r: 0.3134017, g: 0.3066038, b: 1, a: 1}
+  grade3TextColor: {r: 1, g: 0.2971698, b: 0.8468189, a: 1}
+  grade4TextColor: {r: 1, g: 0.9518814, b: 0.6650944, a: 1}
+  maxCritChance: 1
+  minFireIntervalSeconds: 0.05
+  minSkillCooldownSeconds: 0.25
+  maxMoveSpeedMultiplier: 3

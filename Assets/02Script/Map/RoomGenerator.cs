@@ -32,6 +32,8 @@ namespace DDARoguelike
         [SerializeField] private GameObject lrNoRoomPrefab;
         [SerializeField] private GameObject tdNoRoomPrefab;
         [SerializeField] private Vector2 roomSpacing = new Vector2(20.0f, 10.0f);
+        [SerializeField] private float doorInwardOffset = 1.5f;
+        [SerializeField] private float doorTransitionUnlockDelay = 0.45f;
         [SerializeField] private Transform roomsRoot;
         [SerializeField] private int seed;
         [SerializeField] private bool useRandomSeed = true;
@@ -40,6 +42,8 @@ namespace DDARoguelike
         [SerializeField] private EnemyPool enemyPool;
 
         private readonly Queue<GameObject> normalRoomPrefabQueue = new Queue<GameObject>();
+
+        public Transform RoomsRoot => roomsRoot;
 
         public event Action<RoomController> StageStarted;
 
@@ -605,7 +609,7 @@ namespace DDARoguelike
                 roomDoor = doorInstance.AddComponent<RoomDoor>();
             }
 
-            roomDoor.Initialize(room, neighborRoom, direction);
+            roomDoor.Initialize(room, neighborRoom, direction, doorInwardOffset, doorTransitionUnlockDelay);
             room.RegisterDoor(direction, roomDoor);
         }
 
@@ -673,6 +677,21 @@ namespace DDARoguelike
             }
 
             startRoom.TrySpawnEnemies(enemyPool);
+
+            if (playerTransform != null)
+            {
+                PlayerItemInventory itemInventory = playerTransform.GetComponent<PlayerItemInventory>();
+
+                if (itemInventory == null)
+                {
+                    itemInventory = playerTransform.GetComponentInParent<PlayerItemInventory>();
+                }
+
+                if (itemInventory != null)
+                {
+                    itemInventory.NotifyRoomEntered();
+                }
+            }
         }
 
         private void SpawnNoRoomOnRoom(RoomController room, Vector2Int cell, Vector2Int direction)

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d11f9b03ca46954ca56d13740d6b380, type: 3}
+  m_Name: Item_Vitality
+  m_EditorClassIdentifier: Assembly-CSharp::DDARoguelike.ItemDefinition
+  itemId: 04
+  displayName: "\uC751\uAE09\uC0C1\uC790"
+  description: "\uCD5C\uB300\uCCB4\uB825 20 \uC99D\uAC00"
+  icon: {fileID: 2117968074129181263, guid: 535ef007b7a3ddf43ac1793ace15a774, type: 3}
+  effects:
+  - effectType: 1
+    statType: 2
+    value: 20

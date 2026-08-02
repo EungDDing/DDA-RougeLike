@@ -10,6 +10,7 @@ namespace DDARoguelike
 
         private Rigidbody2D rigidbody2D;
         private bool isMovementEnabled = true;
+        private float baseMoveSpeed;
 
         public float MoveSpeed => moveSpeed;
 
@@ -18,6 +19,19 @@ namespace DDARoguelike
         public void AddMoveSpeed(float amount)
         {
             moveSpeed += amount;
+            Debug.Log($"MoveSpeed: {moveSpeed}");
+            NotifyStatsChanged();
+        }
+
+        public void MultiplyMoveSpeed(float factor, float maxMultiplierFromBase)
+        {
+            if (factor == 1.0f)
+            {
+                return;
+            }
+
+            float maxSpeed = baseMoveSpeed * Mathf.Max(1.0f, maxMultiplierFromBase);
+            moveSpeed = Mathf.Min(maxSpeed, Mathf.Max(0.0f, moveSpeed * factor));
             Debug.Log($"MoveSpeed: {moveSpeed}");
             NotifyStatsChanged();
         }
@@ -34,6 +48,7 @@ namespace DDARoguelike
 
         private void Awake()
         {
+            baseMoveSpeed = moveSpeed;
             rigidbody2D = GetComponent<Rigidbody2D>();
 
             if (rigidbody2D == null)

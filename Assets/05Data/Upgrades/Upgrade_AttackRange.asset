@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a11c01de0001aaaabbbbccccddddeee1, type: 3}
+  m_Name: Upgrade_AttackRange
+  m_EditorClassIdentifier: 
+  upgradeId: attack_range
+  displayName: 사거리 증가
+  descriptionTemplate: 사거리를 {percent}% 증가시킵니다.
+  category: 0
+  effectType: 2
+  gradeValues:
+  - grade: 1
+    value: 0.05
+  - grade: 2
+    value: 0.1
+  - grade: 3
+    value: 0.17
+  - grade: 4
+    value: 0.25
+  requiresSkillProjectileSupport: 0
+  isEnabled: 1
