@@ -19,6 +19,7 @@ namespace DDARoguelike
         [SerializeField] private ProjectilePool projectilePool;
 
         private float nextFireTime;
+        private bool isCombatInputEnabled = true;
 
         public float AttackPower => attackPower;
         public float FireRate => fireRate;
@@ -49,8 +50,81 @@ namespace DDARoguelike
             }
         }
 
+        public void SetCombatInputEnabled(bool isEnabled)
+        {
+            isCombatInputEnabled = isEnabled;
+        }
+
+        public void MultiplyAttackPower(float factor)
+        {
+            if (factor == 1.0f)
+            {
+                return;
+            }
+
+            attackPower = Mathf.Max(0.0f, attackPower * factor);
+            Debug.Log($"AttackPower: {attackPower}");
+            NotifyStatsChanged();
+        }
+
+        public void MultiplyFireInterval(float intervalFactor, float minIntervalSeconds)
+        {
+            if (fireRate <= 0.0f || intervalFactor == 1.0f)
+            {
+                return;
+            }
+
+            float interval = 1.0f / fireRate;
+            float clampedFactor = Mathf.Max(0.01f, intervalFactor);
+            interval = Mathf.Max(minIntervalSeconds, interval * clampedFactor);
+            fireRate = 1.0f / interval;
+            Debug.Log($"FireRate: {fireRate}");
+            NotifyStatsChanged();
+        }
+
+        public void MultiplyAttackRange(float factor)
+        {
+            if (factor == 1.0f)
+            {
+                return;
+            }
+
+            attackRange = Mathf.Max(0.0f, attackRange * factor);
+            Debug.Log($"AttackRange: {attackRange}");
+            NotifyStatsChanged();
+        }
+
+        public void MultiplyShotSpeed(float factor)
+        {
+            if (factor == 1.0f)
+            {
+                return;
+            }
+
+            shotSpeed = Mathf.Max(0.0f, shotSpeed * factor);
+            Debug.Log($"ShotSpeed: {shotSpeed}");
+            NotifyStatsChanged();
+        }
+
+        public void MultiplyCritDamage(float factor)
+        {
+            if (factor == 1.0f)
+            {
+                return;
+            }
+
+            critDamage = Mathf.Max(0.0f, critDamage * factor);
+            Debug.Log($"CritDamage: {critDamage}");
+            NotifyStatsChanged();
+        }
+
         private void Update()
         {
+            if (!isCombatInputEnabled)
+            {
+                return;
+            }
+
             if (shotPosition == null || playerProjectilePrefab == null || projectilePool == null)
             {
                 return;

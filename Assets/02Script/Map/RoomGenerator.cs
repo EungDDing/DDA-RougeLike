@@ -41,6 +41,8 @@ namespace DDARoguelike
 
         private readonly Queue<GameObject> normalRoomPrefabQueue = new Queue<GameObject>();
 
+        public Transform RoomsRoot => roomsRoot;
+
         public event Action<RoomController> StageStarted;
 
         private void Start()

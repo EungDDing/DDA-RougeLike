@@ -11,6 +11,7 @@ namespace DDARoguelike
 
         private int bombCount;
         private PlayerHealth playerHealth;
+        private bool isBombInputEnabled = true;
 
         public int BombCount => bombCount;
 
@@ -24,8 +25,18 @@ namespace DDARoguelike
             }
         }
 
+        public void SetBombInputEnabled(bool isEnabled)
+        {
+            isBombInputEnabled = isEnabled;
+        }
+
         private void Update()
         {
+            if (!isBombInputEnabled)
+            {
+                return;
+            }
+
             Keyboard keyboard = Keyboard.current;
 
             if (keyboard == null)

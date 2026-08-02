@@ -13,10 +13,12 @@ namespace DDARoguelike
         private float nextReadyTime;
         private Vector2 lastAimDirection = Vector2.right;
         private bool wasOnCooldown;
+        private bool isSkillInputEnabled = true;
 
         public float CooldownDuration => Mathf.Max(0.0f, cooldownSeconds);
         public float SkillDamage => skillDamage;
         public int SkillProjectileCount => skillProjectileCount;
+        public virtual bool SupportsSkillProjectileCount => false;
 
         public float RemainingCooldown
         {
@@ -40,6 +42,11 @@ namespace DDARoguelike
             UpdateLastAimDirection();
             UpdateCooldownReadyEvent();
 
+            if (!isSkillInputEnabled)
+            {
+                return;
+            }
+
             Keyboard keyboard = Keyboard.current;
 
             if (keyboard == null)
@@ -53,6 +60,36 @@ namespace DDARoguelike
             }
 
             TryActivate();
+        }
+
+        public void SetSkillInputEnabled(bool isEnabled)
+        {
+            isSkillInputEnabled = isEnabled;
+        }
+
+        public void MultiplySkillDamage(float factor)
+        {
+            if (factor == 1.0f)
+            {
+                return;
+            }
+
+            skillDamage = Mathf.Max(0.0f, skillDamage * factor);
+            Debug.Log($"SkillDamage: {skillDamage}");
+            NotifyStatsChanged();
+        }
+
+        public void MultiplyCooldown(float factor, float minCooldownSeconds)
+        {
+            if (factor == 1.0f)
+            {
+                return;
+            }
+
+            float clampedFactor = Mathf.Max(0.01f, factor);
+            cooldownSeconds = Mathf.Max(minCooldownSeconds, cooldownSeconds * clampedFactor);
+            Debug.Log($"SkillCooldown: {cooldownSeconds}");
+            NotifyStatsChanged();
         }
 
         public void AddSkillDamage(float amount)

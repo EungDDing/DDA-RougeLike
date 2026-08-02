@@ -8,6 +8,8 @@ namespace DDARoguelike
         private const string PlayerAttackerName = "Player";
         private const string PlayerIgnoreTag = "Player";
 
+        public override bool SupportsSkillProjectileCount => true;
+
         [SerializeField] private GameObject fireballPrefab;
         [SerializeField] private ProjectilePool projectilePool;
         [SerializeField] private Transform shotPosition;
