@@ -4,7 +4,6 @@ namespace DDARoguelike
 {
     public class ThornHazard : MonoBehaviour
     {
-        private const string PlayerTag = "Player";
         private const string AttackerName = "Thorn";
 
         [SerializeField] private int damage = 1;
@@ -29,7 +28,7 @@ namespace DDARoguelike
                 return;
             }
 
-            if (!other.CompareTag(PlayerTag))
+            if (!other.CompareTag("Player"))
             {
                 return;
             }
@@ -40,11 +39,6 @@ namespace DDARoguelike
             }
 
             IDamaged damaged = other.GetComponent<IDamaged>();
-
-            if (damaged == null)
-            {
-                damaged = other.GetComponentInParent<IDamaged>();
-            }
 
             if (damaged == null)
             {

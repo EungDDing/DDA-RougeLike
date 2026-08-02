@@ -32,6 +32,8 @@ namespace DDARoguelike
         [SerializeField] private GameObject lrNoRoomPrefab;
         [SerializeField] private GameObject tdNoRoomPrefab;
         [SerializeField] private Vector2 roomSpacing = new Vector2(20.0f, 10.0f);
+        [SerializeField] private float doorInwardOffset = 1.5f;
+        [SerializeField] private float doorTransitionUnlockDelay = 0.45f;
         [SerializeField] private Transform roomsRoot;
         [SerializeField] private int seed;
         [SerializeField] private bool useRandomSeed = true;
@@ -607,7 +609,7 @@ namespace DDARoguelike
                 roomDoor = doorInstance.AddComponent<RoomDoor>();
             }
 
-            roomDoor.Initialize(room, neighborRoom, direction);
+            roomDoor.Initialize(room, neighborRoom, direction, doorInwardOffset, doorTransitionUnlockDelay);
             room.RegisterDoor(direction, roomDoor);
         }
 

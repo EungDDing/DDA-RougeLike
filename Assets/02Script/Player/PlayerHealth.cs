@@ -10,15 +10,22 @@ namespace DDARoguelike
 
         [SerializeField] private int maxHp = 6;
         [SerializeField] private float defense = 0.0f;
+        [SerializeField] private float invincibilityDuration = 1.0f;
+        [SerializeField] private float blinkInterval = 0.1f;
 
         private int currentHp;
         private int shield;
         private PlayerBomb playerBomb;
+        private SpriteRenderer spriteRenderer;
+        private float invincibleUntilTime;
+        private float nextBlinkTime;
+        private bool wasInvincible;
 
         public int CurrentHp => currentHp;
         public int MaxHp => maxHp;
         public int Shield => shield;
         public float Defense => defense;
+        public bool IsInvincible => Time.time < invincibleUntilTime;
 
         public event Action HealthChanged;
         public event Action StatsChanged;
@@ -39,7 +46,24 @@ namespace DDARoguelike
             currentHp = maxHp;
             shield = 0;
             playerBomb = GetComponent<PlayerBomb>();
+            spriteRenderer = GetComponent<SpriteRenderer>();
+
+            if (spriteRenderer == null)
+            {
+                spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            }
+
+            if (spriteRenderer == null)
+            {
+                Debug.LogError($"[{nameof(PlayerHealth)}] SpriteRenderer is missing on {gameObject.name}. Blink will be skipped.", this);
+            }
+
             NotifyHealthChanged();
+        }
+
+        private void Update()
+        {
+            UpdateInvincibilityVisual();
         }
 
         public void Heal(int amount)
@@ -124,6 +148,11 @@ namespace DDARoguelike
                 return;
             }
 
+            if (IsInvincible)
+            {
+                return;
+            }
+
             int mitigatedDamage = ApplyDefense(damage);
             int totalDefenseBeforeDamage = currentHp + shield;
             int remainingDamage = mitigatedDamage;
@@ -147,10 +176,64 @@ namespace DDARoguelike
 
             if (appliedDamage > 0)
             {
+                StartInvincibility();
                 Damaged?.Invoke(appliedDamage, attackerName);
             }
 
             NotifyHealthChanged();
+        }
+
+        private void StartInvincibility()
+        {
+            float duration = Mathf.Max(0.0f, invincibilityDuration);
+
+            if (duration <= 0.0f)
+            {
+                return;
+            }
+
+            invincibleUntilTime = Time.time + duration;
+            nextBlinkTime = Time.time;
+            wasInvincible = true;
+
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.enabled = true;
+            }
+        }
+
+        private void UpdateInvincibilityVisual()
+        {
+            bool invincible = IsInvincible;
+
+            if (!invincible)
+            {
+                if (wasInvincible)
+                {
+                    wasInvincible = false;
+
+                    if (spriteRenderer != null)
+                    {
+                        spriteRenderer.enabled = true;
+                    }
+                }
+
+                return;
+            }
+
+            if (spriteRenderer == null)
+            {
+                return;
+            }
+
+            if (Time.time < nextBlinkTime)
+            {
+                return;
+            }
+
+            float interval = Mathf.Max(0.01f, blinkInterval);
+            nextBlinkTime = Time.time + interval;
+            spriteRenderer.enabled = !spriteRenderer.enabled;
         }
 
         private int ApplyDefense(int rawDamage)

@@ -197,11 +197,6 @@ namespace DDARoguelike
 
             IDamaged damaged = collision.collider.GetComponent<IDamaged>();
 
-            if (damaged == null)
-            {
-                damaged = collision.collider.GetComponentInParent<IDamaged>();
-            }
-
             if (damaged != null)
             {
                 damaged.TakeDamage(attackPower, gameObject.name);

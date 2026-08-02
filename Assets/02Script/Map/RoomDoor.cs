@@ -6,9 +6,12 @@ namespace DDARoguelike
     public class RoomDoor : MonoBehaviour
     {
         private const string ClosedChildName = "Closed";
-        private const string PlayerTag = "Player";
-        private const float InwardOffset = 1.0f;
-        private const float TransitionUnlockDelay = 0.2f;
+        private const int OverlapBufferSize = 8;
+
+        [SerializeField] private float inwardOffset = 2.0f;
+        [SerializeField] private float transitionUnlockDelay = 0.45f;
+
+        private readonly Collider2D[] overlapBuffer = new Collider2D[OverlapBufferSize];
 
         private RoomController ownerRoom;
         private RoomController targetRoom;
@@ -16,8 +19,15 @@ namespace DDARoguelike
         private GameObject closedObject;
         private RoomCamera roomCamera;
         private EnemyPool enemyPool;
+        private Collider2D doorCollider;
+        private bool suppressUntilExit;
 
-        public void Initialize(RoomController owner, RoomController target, Vector2Int doorDirection)
+        public void Initialize(
+            RoomController owner,
+            RoomController target,
+            Vector2Int doorDirection,
+            float doorInwardOffset,
+            float doorTransitionUnlockDelay)
         {
             if (owner == null || target == null)
             {
@@ -28,6 +38,9 @@ namespace DDARoguelike
             ownerRoom = owner;
             targetRoom = target;
             direction = doorDirection;
+            inwardOffset = doorInwardOffset;
+            transitionUnlockDelay = doorTransitionUnlockDelay;
+            doorCollider = GetComponent<Collider2D>();
 
             Transform closedTransform = transform.Find(ClosedChildName);
 
@@ -57,9 +70,22 @@ namespace DDARoguelike
             }
         }
 
+        private void FixedUpdate()
+        {
+            if (!suppressUntilExit)
+            {
+                return;
+            }
+
+            if (!IsPlayerOverlapping())
+            {
+                suppressUntilExit = false;
+            }
+        }
+
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (!other.CompareTag(PlayerTag))
+            if (!other.CompareTag("Player"))
             {
                 return;
             }
@@ -67,9 +93,24 @@ namespace DDARoguelike
             TryTransition(other.transform);
         }
 
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (!other.CompareTag("Player"))
+            {
+                return;
+            }
+
+            suppressUntilExit = false;
+        }
+
+        public void SuppressUntilExit()
+        {
+            suppressUntilExit = true;
+        }
+
         private void TryTransition(Transform playerTransform)
         {
-            if (RoomTransition.IsBusy)
+            if (RoomTransition.IsBusy || suppressUntilExit)
             {
                 return;
             }
@@ -119,8 +160,8 @@ namespace DDARoguelike
             }
 
             Vector3 destinationPosition = destinationDoor.transform.position;
-            destinationPosition.x += direction.x * InwardOffset;
-            destinationPosition.y += direction.y * InwardOffset;
+            destinationPosition.x += direction.x * inwardOffset;
+            destinationPosition.y += direction.y * inwardOffset;
 
             if (playerRigidbody != null)
             {
@@ -156,12 +197,13 @@ namespace DDARoguelike
                 targetRoom.TrySpawnEnemies(enemyPool);
             }
 
+            destinationDoor.SuppressUntilExit();
             StartCoroutine(FinishTransition(playerMove));
         }
 
         private IEnumerator FinishTransition(PlayerMove playerMove)
         {
-            yield return new WaitForSecondsRealtime(TransitionUnlockDelay);
+            yield return new WaitForSecondsRealtime(transitionUnlockDelay);
 
             if (playerMove != null)
             {
@@ -169,6 +211,36 @@ namespace DDARoguelike
             }
 
             RoomTransition.End();
+        }
+
+        private bool IsPlayerOverlapping()
+        {
+            if (doorCollider == null)
+            {
+                doorCollider = GetComponent<Collider2D>();
+            }
+
+            if (doorCollider == null)
+            {
+                return false;
+            }
+
+            ContactFilter2D filter = new ContactFilter2D();
+            filter.NoFilter();
+            filter.useTriggers = true;
+            int count = doorCollider.Overlap(filter, overlapBuffer);
+
+            for (int i = 0; i < count; i++)
+            {
+                Collider2D hit = overlapBuffer[i];
+
+                if (hit != null && hit.CompareTag("Player"))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private bool IsOpen()
