@@ -6,12 +6,16 @@ namespace DDARoguelike
 {
     public class RoomController : MonoBehaviour
     {
+        private const string ItemPositionChildName = "ItemPosition";
+
         private readonly Dictionary<Vector2Int, RoomDoor> doorsByDirection = new Dictionary<Vector2Int, RoomDoor>();
 
         private int aliveEnemyCount;
         private bool isInitialized;
         private bool hasSpawnPoints;
         private bool hasSpawnedEnemies;
+        private bool hasSpawnedItemBox;
+        private GameObject itemBoxPrefab;
 
         public bool IsCleared { get; private set; }
         public RoomType RoomType { get; private set; }
@@ -42,6 +46,11 @@ namespace DDARoguelike
             Enemy[] enemies = GetComponentsInChildren<Enemy>(true);
             aliveEnemyCount = enemies.Length;
             SetCleared(aliveEnemyCount == 0);
+        }
+
+        public void SetItemBoxPrefab(GameObject prefab)
+        {
+            itemBoxPrefab = prefab;
         }
 
         public void TrySpawnEnemies(EnemyPool enemyPool)
@@ -100,6 +109,88 @@ namespace DDARoguelike
             }
         }
 
+        public void TrySpawnItemBoxOnEnter()
+        {
+            if (RoomType != RoomType.Golden)
+            {
+                return;
+            }
+
+            TrySpawnItemBox();
+        }
+
+        private void TrySpawnItemBoxOnClear()
+        {
+            if (RoomType != RoomType.Boss)
+            {
+                return;
+            }
+
+            if (!IsCleared)
+            {
+                return;
+            }
+
+            TrySpawnItemBox();
+        }
+
+        private void TrySpawnItemBox()
+        {
+            if (!isInitialized || hasSpawnedItemBox)
+            {
+                return;
+            }
+
+            if (itemBoxPrefab == null)
+            {
+                Debug.LogError($"[{nameof(RoomController)}] ItemBox prefab is not assigned for {gameObject.name}.", this);
+                return;
+            }
+
+            Transform itemPosition = FindItemPosition();
+
+            if (itemPosition == null)
+            {
+                Debug.LogError(
+                    $"[{nameof(RoomController)}] Child '{ItemPositionChildName}' was not found on {gameObject.name}.",
+                    this);
+                return;
+            }
+
+            hasSpawnedItemBox = true;
+
+            GameObject itemBoxInstance = Instantiate(itemBoxPrefab);
+            itemBoxInstance.name = itemBoxPrefab.name;
+            itemBoxInstance.transform.SetParent(transform, false);
+            itemBoxInstance.transform.position = itemPosition.position;
+            itemBoxInstance.transform.rotation = Quaternion.identity;
+            ApplyWorldScale(itemBoxInstance.transform, itemBoxPrefab.transform.localScale);
+        }
+
+        private Transform FindItemPosition()
+        {
+            Transform directChild = transform.Find(ItemPositionChildName);
+
+            if (directChild != null)
+            {
+                return directChild;
+            }
+
+            Transform[] children = GetComponentsInChildren<Transform>(true);
+
+            for (int i = 0; i < children.Length; i++)
+            {
+                Transform child = children[i];
+
+                if (child != null && child.name == ItemPositionChildName)
+                {
+                    return child;
+                }
+            }
+
+            return null;
+        }
+
         private static void ApplyWorldScale(Transform target, Vector3 worldScale)
         {
             if (target == null)
@@ -120,6 +211,16 @@ namespace DDARoguelike
             float scaleY = Mathf.Approximately(parentScale.y, 0.0f) ? worldScale.y : worldScale.y / parentScale.y;
             float scaleZ = Mathf.Approximately(parentScale.z, 0.0f) ? worldScale.z : worldScale.z / parentScale.z;
             target.localScale = new Vector3(scaleX, scaleY, scaleZ);
+        }
+
+        public void RegisterSpawnedEnemies(int count)
+        {
+            if (!isInitialized || IsCleared || count <= 0)
+            {
+                return;
+            }
+
+            aliveEnemyCount += count;
         }
 
         public void NotifyEnemyDied()
@@ -167,6 +268,11 @@ namespace DDARoguelike
 
             IsCleared = cleared;
             ClearedChanged?.Invoke();
+
+            if (IsCleared)
+            {
+                TrySpawnItemBoxOnClear();
+            }
         }
     }
 }

@@ -7,8 +7,8 @@ namespace DDARoguelike
 {
     public class RoomGenerator : MonoBehaviour
     {
-        private const int MinRoomCount = 5;
-        private const int MaxRoomCountExclusive = 8;
+        private const int MinRoomCount = 9;
+        private const int MaxRoomCountExclusive = 12;
         private const int MaxGenerationAttempts = 50;
 
         private static readonly Vector2Int[] CardinalDirections =
@@ -40,6 +40,7 @@ namespace DDARoguelike
         [SerializeField] private RoomCamera roomCamera;
         [SerializeField] private Transform playerTransform;
         [SerializeField] private EnemyPool enemyPool;
+        [SerializeField] private GameObject itemBoxPrefab;
 
         private readonly Queue<GameObject> normalRoomPrefabQueue = new Queue<GameObject>();
 
@@ -198,6 +199,12 @@ namespace DDARoguelike
             if (tdNoRoomPrefab == null)
             {
                 Debug.LogError($"[{nameof(RoomGenerator)}] tdNoRoomPrefab is not assigned.", this);
+                isValid = false;
+            }
+
+            if (itemBoxPrefab == null)
+            {
+                Debug.LogError($"[{nameof(RoomGenerator)}] itemBoxPrefab is not assigned.", this);
                 isValid = false;
             }
 
@@ -498,6 +505,7 @@ namespace DDARoguelike
                 }
 
                 roomController.Initialize(entry.Value);
+                roomController.SetItemBoxPrefab(itemBoxPrefab);
                 rooms[entry.Key] = roomController;
             }
 
