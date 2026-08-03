@@ -50,6 +50,11 @@ namespace DDARoguelike
 
             ResolvePlayerReferences();
 
+            if (selectUI == null)
+            {
+                selectUI = FindFirstObjectByType<ItemSelectUI>();
+            }
+
             if (catalog == null)
             {
                 Debug.LogError($"[{nameof(ItemBox)}] catalog is not assigned on {gameObject.name}.", this);
@@ -57,7 +62,7 @@ namespace DDARoguelike
 
             if (selectUI == null)
             {
-                Debug.LogError($"[{nameof(ItemBox)}] selectUI is not assigned on {gameObject.name}.", this);
+                Debug.LogError($"[{nameof(ItemBox)}] {nameof(ItemSelectUI)} was not found for {gameObject.name}.", this);
             }
 
             ApplyVisualState(false);

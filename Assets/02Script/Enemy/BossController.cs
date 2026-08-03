@@ -18,6 +18,7 @@ namespace DDARoguelike
         private BossContext context;
         private BossPattern previousPattern;
         private Vector2 movementVelocity;
+        private Coroutine patternCoroutine;
         private bool isPatternRunning;
         private bool isDeathHandled;
         private bool contactDamageEnabled = true;
@@ -57,6 +58,18 @@ namespace DDARoguelike
             FindPlayer();
         }
 
+        protected override void OnPreparedFromPool()
+        {
+            isDeathHandled = false;
+            isPatternRunning = false;
+            contactDamageEnabled = true;
+            previousPattern = null;
+            patternCoroutine = null;
+            StopMovement();
+            RestoreDefaultColor();
+            SetState(AI_State.Idle);
+        }
+
         protected override void OnIdle()
         {
             if (context == null || !context.IsValid || bossData == null)
@@ -77,7 +90,7 @@ namespace DDARoguelike
                 return;
             }
 
-            StartCoroutine(RunNextPattern());
+            patternCoroutine = StartCoroutine(RunNextPattern());
         }
 
         protected override void OnDie()
@@ -90,7 +103,13 @@ namespace DDARoguelike
             isDeathHandled = true;
             isPatternRunning = false;
             contactDamageEnabled = true;
-            StopAllCoroutines();
+
+            if (patternCoroutine != null)
+            {
+                StopCoroutine(patternCoroutine);
+                patternCoroutine = null;
+            }
+
             StopMovement();
             RestoreDefaultColor();
         }
@@ -273,6 +292,7 @@ namespace DDARoguelike
             {
                 yield return new WaitForSeconds(PatternRetryDelay);
                 isPatternRunning = false;
+                patternCoroutine = null;
                 yield break;
             }
 
@@ -286,6 +306,7 @@ namespace DDARoguelike
             float interval = bossData.MinimumPatternInterval + pattern.RecoveryDuration;
             yield return new WaitForSeconds(interval);
             isPatternRunning = false;
+            patternCoroutine = null;
         }
 
         private void FindPlayer()

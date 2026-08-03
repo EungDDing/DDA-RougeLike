@@ -195,6 +195,8 @@ namespace DDARoguelike
             if (targetRoom != null)
             {
                 targetRoom.TrySpawnEnemies(enemyPool);
+                targetRoom.TrySpawnItemBoxOnEnter();
+                UpdateBossHpHud(targetRoom);
             }
 
             PlayerItemInventory itemInventory = playerTransform.GetComponent<PlayerItemInventory>();
@@ -253,6 +255,25 @@ namespace DDARoguelike
             }
 
             return false;
+        }
+
+        private static void UpdateBossHpHud(RoomController enteredRoom)
+        {
+            BossHpHud bossHpHud = FindFirstObjectByType<BossHpHud>(FindObjectsInactive.Include);
+
+            if (bossHpHud == null)
+            {
+                return;
+            }
+
+            if (enteredRoom != null && enteredRoom.RoomType == RoomType.Boss)
+            {
+                bossHpHud.BindBossRoom(enteredRoom);
+            }
+            else
+            {
+                bossHpHud.Clear();
+            }
         }
 
         private bool IsOpen()
