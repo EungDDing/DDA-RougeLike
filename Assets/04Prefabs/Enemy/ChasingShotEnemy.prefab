@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42dfd7a90142cb4ab51e9afa13d1124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DDARoguelike.ChasingShotEnemy
-  maxHp: 10
+  maxHp: 1
   attackPower: 1
   knockbackForce: 2
   knockbackDuration: 0.1

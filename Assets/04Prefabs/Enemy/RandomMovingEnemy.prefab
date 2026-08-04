@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7e8f901a2b3c4d5e6f708192a3b4567, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DDARoguelike.RandomMovingEnemy
-  maxHp: 15
+  maxHp: 1
   attackPower: 1
   knockbackForce: 2
   knockbackDuration: 0.1

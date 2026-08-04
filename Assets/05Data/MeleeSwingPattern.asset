@@ -21,6 +21,6 @@ MonoBehaviour:
   telegraphColor: {r: 1, g: 0.25, b: 0.2, a: 1}
   chaseSpeed: 3
   maximumChaseDuration: 1.5
-  attackRange: 1.8
+  attackRange: 0.9
   attackArc: 120
   damageMultiplier: 1

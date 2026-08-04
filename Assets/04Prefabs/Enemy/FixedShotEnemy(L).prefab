@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8e4c1a29f6d4e7a9c0d1e2f3a4b5c6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DDARoguelike.FixedShotEnemy
-  maxHp: 10
+  maxHp: 1
   attackPower: 1
   knockbackForce: 2
   knockbackDuration: 0.1
