@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6809038707576499709}
   - component: {fileID: 5181321556622483528}
   - component: {fileID: 3125440180859887450}
+  - component: {fileID: 4286215568369333025}
   m_Layer: 0
   m_Name: TemporaryBoss
   m_TagString: Enemy
@@ -85,8 +86,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 0.25943398, g: 0.29443952, b: 1, a: 1}
+  m_Sprite: {fileID: -299401436149029637, guid: 1306a0562f7c5da44bf5a94f331ed69d, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -169,13 +170,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f6e2a91c3d8495ba0f4e21d7c8b9631, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DDARoguelike.TemporaryBoss
   maxHp: 30
   attackPower: 1
   knockbackForce: 1
   knockbackDuration: 0.05
   bossData: {fileID: 11400000, guid: 20000000000000000000000000000005, type: 2}
+--- !u!111 &4286215568369333025
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106394745598112920}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &8933158483428149144
 GameObject:
   m_ObjectHideFlags: 0
