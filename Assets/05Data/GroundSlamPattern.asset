@@ -15,9 +15,9 @@ MonoBehaviour:
   patternName: Ground Slam
   weight: 0.8
   minimumActivationDistance: 0
-  maximumActivationDistance: 3
+  maximumActivationDistance: 1.5
   telegraphDuration: 0.75
   recoveryDuration: 0.9
   telegraphColor: {r: 1, g: 0.45, b: 0.1, a: 1}
-  damageRadius: 2.5
+  damageRadius: 1.25
   damageMultiplier: 1

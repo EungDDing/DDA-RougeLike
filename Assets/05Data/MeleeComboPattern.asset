@@ -15,7 +15,7 @@ MonoBehaviour:
   patternName: Melee Combo
   weight: 0.9
   minimumActivationDistance: 0
-  maximumActivationDistance: 3.5
+  maximumActivationDistance: 1.75
   telegraphDuration: 0.35
   recoveryDuration: 0.9
   telegraphColor: {r: 1, g: 0.35, b: 0.15, a: 1}
@@ -24,6 +24,6 @@ MonoBehaviour:
   intervalBetweenHits: 0.12
   lungeSpeed: 4
   lungeDuration: 0.08
-  attackRange: 1.7
+  attackRange: 0.85
   attackArc: 135
   damageMultiplier: 1

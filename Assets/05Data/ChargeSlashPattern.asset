@@ -22,7 +22,7 @@ MonoBehaviour:
   chargeSpeed: 8
   chargeDuration: 0.55
   postChargeDelay: 0.12
-  chargeIndicatorWidth: 0.8
-  slashRange: 2.2
+  chargeIndicatorWidth: 0.4
+  slashRange: 1.1
   slashArc: 160
   damageMultiplier: 1
