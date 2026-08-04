@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2f3a4b5c6d708192a3b4c5d6e7f8091, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DDARoguelike.EnemySpawnPoint
-  enemyPrefab: {fileID: 2106394745598112920, guid: 6a431537bab84b11a24db6610eef9c65, type: 3}
+  enemyPrefab: {fileID: 1597533862961959149, guid: edc84ee348e68f749a5ea7a728257e9a, type: 3}
 --- !u!1 &4993740032884256820
 GameObject:
   m_ObjectHideFlags: 0

@@ -43,6 +43,7 @@ namespace DDARoguelike
         [SerializeField] private GameObject itemBoxPrefab;
 
         private readonly Queue<GameObject> normalRoomPrefabQueue = new Queue<GameObject>();
+        private Dictionary<Vector2Int, RoomController> roomsByCell;
 
         public Transform RoomsRoot => roomsRoot;
 
@@ -92,11 +93,12 @@ namespace DDARoguelike
             }
 
             BuildNormalRoomPrefabQueue();
-            Dictionary<Vector2Int, RoomController> rooms = SpawnRooms(layout);
-            SpawnRoomEdges(layout, rooms);
-            PlacePlayerAndCamera(rooms);
+            roomsByCell = SpawnRooms(layout);
+            SpawnRoomEdges(layout, roomsByCell);
+            PlacePlayerAndCamera(roomsByCell);
+            NotifyMiniMapHud(roomsByCell);
 
-            RoomController bossRoom = FindRoomByType(rooms, RoomType.Boss);
+            RoomController bossRoom = FindRoomByType(roomsByCell, RoomType.Boss);
 
             if (bossRoom == null)
             {
@@ -504,7 +506,7 @@ namespace DDARoguelike
                     roomController = instance.AddComponent<RoomController>();
                 }
 
-                roomController.Initialize(entry.Value);
+                roomController.Initialize(entry.Value, entry.Key);
                 roomController.SetItemBoxPrefab(itemBoxPrefab);
                 rooms[entry.Key] = roomController;
             }
@@ -699,6 +701,30 @@ namespace DDARoguelike
                 {
                     itemInventory.NotifyRoomEntered();
                 }
+            }
+        }
+
+        private void NotifyMiniMapHud(Dictionary<Vector2Int, RoomController> rooms)
+        {
+            MiniMapHud miniMapHud = FindFirstObjectByType<MiniMapHud>(FindObjectsInactive.Include);
+
+            if (miniMapHud == null)
+            {
+                return;
+            }
+
+            miniMapHud.Bind(rooms);
+
+            RoomController startRoom = null;
+
+            if (rooms != null && rooms.TryGetValue(Vector2Int.zero, out RoomController roomAtOrigin))
+            {
+                startRoom = roomAtOrigin;
+            }
+
+            if (startRoom != null)
+            {
+                miniMapHud.NotifyRoomEntered(startRoom);
             }
         }
 

@@ -5,8 +5,13 @@ namespace DDARoguelike
     public class ChasingEnemy : Enemy
     {
         [SerializeField] private float moveSpeed = 3.0f;
+        [SerializeField] private float obstacleCastRadius = 0.35f;
+        [SerializeField] private float obstacleLookAhead = 0.8f;
+        [SerializeField] private float avoidanceStickBias = 0.35f;
+        [SerializeField] private float turnRadiansPerSecond = 8.0f;
 
         private Transform playerTransform;
+        private Vector2 smoothedMoveDirection;
 
         protected override void Awake()
         {
@@ -43,6 +48,7 @@ namespace DDARoguelike
         protected override void OnPreparedFromPool()
         {
             SetState(AI_State.Chase);
+            smoothedMoveDirection = Vector2.zero;
 
             if (playerTransform == null)
             {
@@ -69,6 +75,7 @@ namespace DDARoguelike
 
             if (currentState != AI_State.Chase || playerTransform == null)
             {
+                smoothedMoveDirection = Vector2.zero;
                 rigidbody2D.linearVelocity = Vector2.zero;
                 return;
             }
@@ -78,10 +85,24 @@ namespace DDARoguelike
             if (direction.sqrMagnitude > 0.0001f)
             {
                 direction.Normalize();
-                rigidbody2D.linearVelocity = direction * moveSpeed;
+                Vector2 steered = ObstacleAvoidanceSteering.Resolve(
+                    rigidbody2D.position,
+                    direction,
+                    playerTransform.position,
+                    obstacleCastRadius,
+                    obstacleLookAhead,
+                    smoothedMoveDirection,
+                    avoidanceStickBias);
+                smoothedMoveDirection = ObstacleAvoidanceSteering.SmoothDirection(
+                    smoothedMoveDirection,
+                    steered,
+                    turnRadiansPerSecond,
+                    Time.fixedDeltaTime);
+                rigidbody2D.linearVelocity = smoothedMoveDirection * moveSpeed;
             }
             else
             {
+                smoothedMoveDirection = Vector2.zero;
                 rigidbody2D.linearVelocity = Vector2.zero;
             }
         }
