@@ -19,10 +19,11 @@ namespace DDARoguelike
 
         public bool IsCleared { get; private set; }
         public RoomType RoomType { get; private set; }
+        public Vector2Int Cell { get; private set; }
 
         public event Action ClearedChanged;
 
-        public void Initialize(RoomType roomType)
+        public void Initialize(RoomType roomType, Vector2Int cell)
         {
             if (isInitialized)
             {
@@ -31,6 +32,7 @@ namespace DDARoguelike
 
             isInitialized = true;
             RoomType = roomType;
+            Cell = cell;
 
             EnemySpawnPoint[] spawnPoints = GetComponentsInChildren<EnemySpawnPoint>(true);
             hasSpawnPoints = spawnPoints != null && spawnPoints.Length > 0;
@@ -252,6 +254,24 @@ namespace DDARoguelike
         public bool TryGetDoor(Vector2Int direction, out RoomDoor door)
         {
             return doorsByDirection.TryGetValue(direction, out door);
+        }
+
+        public void GetConnectedDirections(List<Vector2Int> results)
+        {
+            if (results == null)
+            {
+                return;
+            }
+
+            results.Clear();
+
+            foreach (KeyValuePair<Vector2Int, RoomDoor> entry in doorsByDirection)
+            {
+                if (entry.Value != null)
+                {
+                    results.Add(entry.Key);
+                }
+            }
         }
 
         private void SetCleared(bool cleared)

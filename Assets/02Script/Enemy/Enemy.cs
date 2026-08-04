@@ -17,11 +17,13 @@ namespace DDARoguelike
     public abstract class Enemy : MonoBehaviour, IDamaged
     {
         private const float ReleaseDelaySeconds = 0.5f;
+        private const string PlayerTag = "Player";
 
         [SerializeField] protected float maxHp;
         [SerializeField] protected int attackPower;
         [SerializeField] private float knockbackForce = 2.0f;
         [SerializeField] private float knockbackDuration = 0.1f;
+        [SerializeField] private float softPushSpeed = 5.0f;
 
         private float currentHp;
         private bool isDead;
@@ -41,6 +43,8 @@ namespace DDARoguelike
         public GameObject SourcePrefab => sourcePrefab;
 
         public event Action<float, string> Damaged;
+
+        protected virtual bool ReceivesSoftPush => true;
 
         protected virtual void Awake()
         {
@@ -190,7 +194,7 @@ namespace DDARoguelike
                 return;
             }
 
-            if (!collision.collider.CompareTag("Player"))
+            if (!collision.collider.CompareTag(PlayerTag))
             {
                 return;
             }
@@ -201,6 +205,56 @@ namespace DDARoguelike
             {
                 damaged.TakeDamage(attackPower, gameObject.name);
             }
+        }
+
+        protected virtual void OnCollisionStay2D(Collision2D collision)
+        {
+            if (!ReceivesSoftPush || isDead || currentState == AI_State.Die || rigidbody2D == null)
+            {
+                return;
+            }
+
+            if (collision == null || collision.collider == null)
+            {
+                return;
+            }
+
+            if (!IsSoftPushSource(collision.collider))
+            {
+                return;
+            }
+
+            Vector2 away = (Vector2)transform.position - (Vector2)collision.collider.transform.position;
+
+            if (away.sqrMagnitude <= 0.0001f)
+            {
+                if (collision.contactCount > 0)
+                {
+                    away = collision.GetContact(0).normal;
+                }
+                else
+                {
+                    away = Vector2.right;
+                }
+            }
+
+            Vector2 pushOffset = away.normalized * softPushSpeed * Time.fixedDeltaTime;
+            rigidbody2D.MovePosition(rigidbody2D.position + pushOffset);
+        }
+
+        private static bool IsSoftPushSource(Collider2D other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            if (other.CompareTag(PlayerTag))
+            {
+                return true;
+            }
+
+            return other.GetComponentInParent<BossController>() != null;
         }
 
         private void BeginDeath()

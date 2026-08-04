@@ -8,15 +8,22 @@ namespace DDARoguelike
 
         [SerializeField] private float chaseRange = 10.0f;
         [SerializeField] private float shotRange = 6.0f;
+        [SerializeField] private float shotRangeExitPadding = 1.25f;
         [SerializeField] private float moveSpeed = 3.0f;
         [SerializeField] private float fireRate = 1.0f;
         [SerializeField] private float shotSpeed = 3.0f;
+        [SerializeField] private float obstacleCastRadius = 0.35f;
+        [SerializeField] private float obstacleLookAhead = 0.8f;
+        [SerializeField] private float avoidanceStickBias = 0.35f;
+        [SerializeField] private float turnRadiansPerSecond = 8.0f;
+        [SerializeField] private float stopDeceleration = 12.0f;
         [SerializeField] private Transform shotPosition;
         [SerializeField] private GameObject enemyProjectilePrefab;
         [SerializeField] private ProjectilePool projectilePool;
 
         private Transform playerTransform;
         private float nextFireTime;
+        private Vector2 smoothedMoveDirection;
 
         protected override void Awake()
         {
@@ -74,6 +81,7 @@ namespace DDARoguelike
         {
             SetState(AI_State.Chase);
             nextFireTime = 0.0f;
+            smoothedMoveDirection = Vector2.zero;
 
             if (projectilePool == null)
             {
@@ -121,6 +129,35 @@ namespace DDARoguelike
             }
 
             float distance = Vector2.Distance(transform.position, playerTransform.position);
+            float attackExitRange = shotRange + Mathf.Max(0.0f, shotRangeExitPadding);
+
+            if (currentState == AI_State.Attack)
+            {
+                if (distance > chaseRange)
+                {
+                    SetState(AI_State.Idle);
+                }
+                else if (distance > attackExitRange)
+                {
+                    SetState(AI_State.Chase);
+                }
+
+                return;
+            }
+
+            if (currentState == AI_State.Chase)
+            {
+                if (distance <= shotRange)
+                {
+                    SetState(AI_State.Attack);
+                }
+                else if (distance > chaseRange)
+                {
+                    SetState(AI_State.Idle);
+                }
+
+                return;
+            }
 
             if (distance <= shotRange)
             {
@@ -194,9 +231,21 @@ namespace DDARoguelike
                 return;
             }
 
-            if (currentState != AI_State.Chase || playerTransform == null)
+            if (playerTransform == null || currentState == AI_State.Die || currentState == AI_State.Idle)
             {
-                rigidbody2D.linearVelocity = Vector2.zero;
+                ApplyStopMovement();
+                return;
+            }
+
+            if (currentState == AI_State.Attack)
+            {
+                ApplyStopMovement();
+                return;
+            }
+
+            if (currentState != AI_State.Chase)
+            {
+                ApplyStopMovement();
                 return;
             }
 
@@ -205,11 +254,40 @@ namespace DDARoguelike
             if (direction.sqrMagnitude > 0.0001f)
             {
                 direction.Normalize();
-                rigidbody2D.linearVelocity = direction * moveSpeed;
+                Vector2 steered = ObstacleAvoidanceSteering.Resolve(
+                    rigidbody2D.position,
+                    direction,
+                    playerTransform.position,
+                    obstacleCastRadius,
+                    obstacleLookAhead,
+                    smoothedMoveDirection,
+                    avoidanceStickBias);
+                smoothedMoveDirection = ObstacleAvoidanceSteering.SmoothDirection(
+                    smoothedMoveDirection,
+                    steered,
+                    turnRadiansPerSecond,
+                    Time.fixedDeltaTime);
+                rigidbody2D.linearVelocity = smoothedMoveDirection * moveSpeed;
             }
             else
             {
-                rigidbody2D.linearVelocity = Vector2.zero;
+                ApplyStopMovement();
+            }
+        }
+
+        private void ApplyStopMovement()
+        {
+            float deceleration = Mathf.Max(0.0f, stopDeceleration) * Time.fixedDeltaTime;
+            Vector2 currentVelocity = rigidbody2D.linearVelocity;
+            rigidbody2D.linearVelocity = Vector2.MoveTowards(currentVelocity, Vector2.zero, deceleration);
+
+            if (rigidbody2D.linearVelocity.sqrMagnitude <= 0.0001f)
+            {
+                smoothedMoveDirection = Vector2.zero;
+            }
+            else
+            {
+                smoothedMoveDirection = rigidbody2D.linearVelocity.normalized;
             }
         }
     }

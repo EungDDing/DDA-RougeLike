@@ -22,6 +22,8 @@ namespace DDARoguelike
         private Collider2D doorCollider;
         private bool suppressUntilExit;
 
+        public RoomController TargetRoom => targetRoom;
+
         public void Initialize(
             RoomController owner,
             RoomController target,
@@ -197,6 +199,7 @@ namespace DDARoguelike
                 targetRoom.TrySpawnEnemies(enemyPool);
                 targetRoom.TrySpawnItemBoxOnEnter();
                 UpdateBossHpHud(targetRoom);
+                UpdateMiniMapHud(targetRoom);
             }
 
             PlayerItemInventory itemInventory = playerTransform.GetComponent<PlayerItemInventory>();
@@ -274,6 +277,18 @@ namespace DDARoguelike
             {
                 bossHpHud.Clear();
             }
+        }
+
+        private static void UpdateMiniMapHud(RoomController enteredRoom)
+        {
+            MiniMapHud miniMapHud = FindFirstObjectByType<MiniMapHud>(FindObjectsInactive.Include);
+
+            if (miniMapHud == null)
+            {
+                return;
+            }
+
+            miniMapHud.NotifyRoomEntered(enteredRoom);
         }
 
         private bool IsOpen()

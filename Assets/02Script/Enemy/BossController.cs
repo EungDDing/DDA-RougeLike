@@ -27,6 +27,8 @@ namespace DDARoguelike
         public string BossId => bossData != null ? bossData.BossId : gameObject.name;
         public Vector2 Position => rigidbody2D != null ? rigidbody2D.position : (Vector2)transform.position;
 
+        protected override bool ReceivesSoftPush => false;
+
         protected override void Awake()
         {
             if (bossData != null)
