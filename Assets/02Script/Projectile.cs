@@ -7,6 +7,8 @@ namespace DDARoguelike
         private const string EnemyIgnoreTag = "Enemy";
         private const string ThornTag = "Thorn";
         private const string HoleTag = "Hole";
+        private const string EnemyProjectileTag = "EnemyProjectile";
+        private const string PlayerProjectileTag = "PlayerProjectile";
 
         private Rigidbody2D rigidbody2D;
         private Vector2 spawnPosition;
@@ -20,8 +22,19 @@ namespace DDARoguelike
         private string ignoreTag;
         private PlayerItemInventory ownerItemInventory;
         private bool isActive;
+        private bool hasDealtDamage;
 
         public GameObject SourcePrefab => sourcePrefab;
+        public float Damage => damage;
+
+        protected Vector2 Direction
+        {
+            get { return direction; }
+            set { direction = value; }
+        }
+
+        protected bool IsActive => isActive;
+        protected float Speed => speed;
 
         private void Awake()
         {
@@ -57,7 +70,9 @@ namespace DDARoguelike
             ownerItemInventory = null;
             spawnPosition = transform.position;
             isActive = true;
+            hasDealtDamage = false;
             ApplyFacingRotation(direction);
+            OnLaunch();
 
             if (rigidbody2D != null)
             {
@@ -65,9 +80,12 @@ namespace DDARoguelike
             }
         }
 
-        private void ApplyFacingRotation(Vector2 travelDirection)
+        protected virtual void OnLaunch()
         {
-            // Sprite forward is down (-Y), so identity faces Vector2.down.
+        }
+
+        protected void ApplyFacingRotation(Vector2 travelDirection)
+        {
             float angleDegrees = Mathf.Atan2(travelDirection.y, travelDirection.x) * Mathf.Rad2Deg + 90.0f;
             transform.rotation = Quaternion.Euler(0.0f, 0.0f, angleDegrees);
         }
@@ -77,8 +95,6 @@ namespace DDARoguelike
             ownerItemInventory = inventory;
         }
 
-        public float Damage => damage;
-
         private void FixedUpdate()
         {
             if (!isActive)
@@ -86,10 +102,7 @@ namespace DDARoguelike
                 return;
             }
 
-            if (rigidbody2D != null)
-            {
-                rigidbody2D.linearVelocity = direction * speed;
-            }
+            UpdateTravel();
 
             float traveledDistance = Vector2.Distance(spawnPosition, transform.position);
 
@@ -99,19 +112,32 @@ namespace DDARoguelike
             }
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        protected virtual void UpdateTravel()
+        {
+            if (rigidbody2D != null)
+            {
+                rigidbody2D.linearVelocity = direction * speed;
+            }
+        }
+
+        protected virtual void OnTriggerEnter2D(Collider2D other)
         {
             if (!isActive)
             {
                 return;
             }
 
-            if (!string.IsNullOrEmpty(ignoreTag) && other.CompareTag(ignoreTag))
+            if (ShouldIgnoreCollider(other))
             {
                 return;
             }
 
             if (other.CompareTag(ThornTag) || other.CompareTag(HoleTag))
+            {
+                return;
+            }
+
+            if (TryResolveProjectileClash(other))
             {
                 return;
             }
@@ -132,8 +158,74 @@ namespace DDARoguelike
             Release();
         }
 
+        private bool TryResolveProjectileClash(Collider2D other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            bool thisIsPlayerShot = CompareTag(PlayerProjectileTag);
+            bool thisIsEnemyShot = CompareTag(EnemyProjectileTag);
+            bool otherIsPlayerShot = other.CompareTag(PlayerProjectileTag);
+            bool otherIsEnemyShot = other.CompareTag(EnemyProjectileTag);
+
+            if (!(thisIsPlayerShot && otherIsEnemyShot) && !(thisIsEnemyShot && otherIsPlayerShot))
+            {
+                return false;
+            }
+
+            // Destructible enemy projectiles use IDamaged / TakeDamage instead of instant clash.
+            if (thisIsPlayerShot && other.GetComponent<IDamaged>() != null)
+            {
+                return false;
+            }
+
+            if (thisIsEnemyShot && GetComponent<IDamaged>() != null)
+            {
+                return false;
+            }
+
+            Projectile otherProjectile = other.GetComponent<Projectile>();
+
+            if (otherProjectile != null)
+            {
+                otherProjectile.Release();
+            }
+
+            Release();
+            return true;
+        }
+
+        private bool ShouldIgnoreCollider(Collider2D other)
+        {
+            if (other == null || string.IsNullOrEmpty(ignoreTag))
+            {
+                return false;
+            }
+
+            Transform current = other.transform;
+
+            while (current != null)
+            {
+                if (current.CompareTag(ignoreTag))
+                {
+                    return true;
+                }
+
+                current = current.parent;
+            }
+
+            return false;
+        }
+
         private void ApplyDamage(Collider2D other)
         {
+            if (hasDealtDamage)
+            {
+                return;
+            }
+
             IDamaged damaged = other.GetComponent<IDamaged>();
 
             if (damaged == null)
@@ -141,15 +233,30 @@ namespace DDARoguelike
                 damaged = other.GetComponentInParent<IDamaged>();
             }
 
-            if (damaged != null)
+            if (damaged == null)
             {
-                int appliedDamage = Mathf.RoundToInt(damage);
-                damaged.TakeDamage(appliedDamage, attackerName);
+                return;
+            }
 
-                if (ownerItemInventory != null && appliedDamage > 0)
-                {
-                    ownerItemInventory.NotifyDamageDealt(appliedDamage);
-                }
+            Enemy enemy = other.GetComponent<Enemy>();
+
+            if (enemy == null)
+            {
+                enemy = other.GetComponentInParent<Enemy>();
+            }
+
+            if (enemy != null && !enemy.TryAcceptProjectileHit(GetInstanceID()))
+            {
+                return;
+            }
+
+            hasDealtDamage = true;
+            int appliedDamage = Mathf.RoundToInt(damage);
+            damaged.TakeDamage(appliedDamage, attackerName);
+
+            if (ownerItemInventory != null && appliedDamage > 0)
+            {
+                ownerItemInventory.NotifyDamageDealt(appliedDamage);
             }
         }
 
@@ -176,6 +283,7 @@ namespace DDARoguelike
             }
 
             isActive = false;
+            hasDealtDamage = false;
 
             if (rigidbody2D != null)
             {
