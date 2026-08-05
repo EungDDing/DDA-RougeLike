@@ -35,6 +35,8 @@ namespace DDARoguelike
         private EnemyPool ownerPool;
         private Coroutine releaseCoroutine;
         private Vector3 prefabLocalScale = Vector3.one;
+        private int lastAcceptedProjectileId = int.MinValue;
+        private int lastAcceptedProjectileFrame = -1;
 
         public float MaxHp => maxHp;
         public float CurrentHp => currentHp;
@@ -75,14 +77,11 @@ namespace DDARoguelike
             currentHp = maxHp;
             knockbackTimer = 0.0f;
             knockbackVelocity = Vector2.zero;
+            lastAcceptedProjectileId = int.MinValue;
+            lastAcceptedProjectileFrame = -1;
             transform.localScale = prefabLocalScale;
 
-            Collider2D[] colliders = GetComponents<Collider2D>();
-
-            for (int i = 0; i < colliders.Length; i++)
-            {
-                colliders[i].enabled = true;
-            }
+            SetCollidersEnabled(true);
 
             if (rigidbody2D != null)
             {
@@ -94,6 +93,20 @@ namespace DDARoguelike
 
         protected virtual void OnPreparedFromPool()
         {
+        }
+
+        public bool TryAcceptProjectileHit(int projectileInstanceId)
+        {
+            int frame = Time.frameCount;
+
+            if (projectileInstanceId == lastAcceptedProjectileId && frame == lastAcceptedProjectileFrame)
+            {
+                return false;
+            }
+
+            lastAcceptedProjectileId = projectileInstanceId;
+            lastAcceptedProjectileFrame = frame;
+            return true;
         }
 
         public void ApplyKnockback(Vector2 projectileDirection)
@@ -276,7 +289,7 @@ namespace DDARoguelike
                 roomController.NotifyEnemyDied();
             }
 
-            Collider2D[] colliders = GetComponents<Collider2D>();
+            Collider2D[] colliders = GetComponentsInChildren<Collider2D>(true);
 
             for (int i = 0; i < colliders.Length; i++)
             {
@@ -302,6 +315,19 @@ namespace DDARoguelike
             else
             {
                 Destroy(gameObject, ReleaseDelaySeconds);
+            }
+        }
+
+        private void SetCollidersEnabled(bool enabled)
+        {
+            Collider2D[] colliders = GetComponentsInChildren<Collider2D>(true);
+
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i] != null)
+                {
+                    colliders[i].enabled = enabled;
+                }
             }
         }
 

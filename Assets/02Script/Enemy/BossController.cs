@@ -11,9 +11,9 @@ namespace DDARoguelike
         [SerializeField] private BossData bossData;
 
         private readonly BossPatternSelector patternSelector = new BossPatternSelector();
-        private Transform playerTransform;
+        protected Transform playerTransform;
         private IDamaged playerDamaged;
-        private SpriteRenderer spriteRenderer;
+        protected SpriteRenderer spriteRenderer;
         private Color defaultColor = Color.white;
         private BossContext context;
         private BossPattern previousPattern;
@@ -335,6 +335,14 @@ namespace DDARoguelike
             }
 
             context = new BossContext(this, playerTransform);
+        }
+
+        protected void EnsurePlayerReference()
+        {
+            if (playerTransform == null || context == null || !context.IsValid)
+            {
+                FindPlayer();
+            }
         }
 
         private int CalculatePatternDamage(float damageMultiplier)
