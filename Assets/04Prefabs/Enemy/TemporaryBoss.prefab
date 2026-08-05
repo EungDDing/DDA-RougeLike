@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6809038707576499709}
   - component: {fileID: 5181321556622483528}
   - component: {fileID: 3125440180859887450}
+  - component: {fileID: 4286215568369333025}
   m_Layer: 0
   m_Name: TemporaryBoss
   m_TagString: Enemy
@@ -176,18 +177,29 @@ MonoBehaviour:
   knockbackForce: 1
   knockbackDuration: 0.05
   bossData: {fileID: 11400000, guid: 20000000000000000000000000000005, type: 2}
-  animatedSpriteRenderer: {fileID: 6322018932526991330}
-  walkingFrames:
-  - {fileID: -4876725991297814349, guid: 71bf2ab7f404b554e80ed4cefcc99892, type: 3}
-  - {fileID: -8370349567695769292, guid: 1545922f2b187c24b9fe48f73e8dda10, type: 3}
-  - {fileID: -7483254629112161244, guid: f902c085ca92172458679ea81d3802c9, type: 3}
-  - {fileID: -236869560359442929, guid: 0317eadd249cb8840b5762cd9571f82b, type: 3}
-  - {fileID: -8538882093583680768, guid: f35d2ffe073385f499eb06c70109437f, type: 3}
-  - {fileID: -3264844689093872921, guid: 8908bb08a7512f84a811c6e6af9358a2, type: 3}
-  - {fileID: -2262250631618314751, guid: 92fab9d1ce4f2a040b8434a93fc2f2f5, type: 3}
-  - {fileID: -83038746422462903, guid: 7d95287f129832b4584bcc91256272e6, type: 3}
-  - {fileID: -6951634951646263482, guid: f031519e4ae76c44bade438eac2ca825, type: 3}
-  walkingFramesPerSecond: 9
+  animator: {fileID: 4286215568369333025}
+--- !u!95 &4286215568369333025
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106394745598112920}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 63baf945f30d4440a7a4cc10682f163e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8933158483428149144
 GameObject:
   m_ObjectHideFlags: 0
