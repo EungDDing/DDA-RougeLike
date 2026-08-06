@@ -5,6 +5,8 @@ namespace DDARoguelike
     public class ChasingShotEnemy : Enemy
     {
         private const string EnemyTag = "Enemy";
+        private static readonly int IsChasingHash = Animator.StringToHash("IsChasing");
+        private static readonly int IsAttackingHash = Animator.StringToHash("IsAttacking");
 
         [SerializeField] private float chaseRange = 10.0f;
         [SerializeField] private float shotRange = 6.0f;
@@ -20,6 +22,8 @@ namespace DDARoguelike
         [SerializeField] private Transform shotPosition;
         [SerializeField] private GameObject enemyProjectilePrefab;
         [SerializeField] private ProjectilePool projectilePool;
+        [SerializeField] private Animator animator;
+        [SerializeField] private SpriteRenderer spriteRenderer;
 
         private Transform playerTransform;
         private float nextFireTime;
@@ -40,9 +44,24 @@ namespace DDARoguelike
             base.Awake();
             SetState(AI_State.Chase);
 
+            if (animator == null)
+            {
+                animator = GetComponent<Animator>();
+            }
+
+            if (spriteRenderer == null)
+            {
+                spriteRenderer = GetComponent<SpriteRenderer>();
+            }
+
             if (rigidbody2D == null)
             {
                 Debug.LogError($"[{nameof(ChasingShotEnemy)}] Rigidbody2D is required on {gameObject.name}.", this);
+            }
+
+            if (animator == null)
+            {
+                Debug.LogError($"[{nameof(ChasingShotEnemy)}] Animator is required on {gameObject.name}.", this);
             }
 
             if (shotPosition == null)
@@ -97,6 +116,8 @@ namespace DDARoguelike
                     playerTransform = playerObject.transform;
                 }
             }
+
+            UpdateAnimator();
         }
 
         protected override void OnIdle()
@@ -119,6 +140,47 @@ namespace DDARoguelike
             }
 
             TryShoot();
+        }
+
+        private void LateUpdate()
+        {
+            if (currentState == AI_State.Die)
+            {
+                return;
+            }
+
+            UpdateFacing();
+            UpdateAnimator();
+        }
+
+        private void UpdateAnimator()
+        {
+            if (animator == null)
+            {
+                return;
+            }
+
+            bool isAttacking = currentState == AI_State.Attack;
+            bool isChasing = currentState == AI_State.Chase;
+            animator.SetBool(IsAttackingHash, isAttacking);
+            animator.SetBool(IsChasingHash, isChasing);
+        }
+
+        private void UpdateFacing()
+        {
+            if (spriteRenderer == null || playerTransform == null)
+            {
+                return;
+            }
+
+            float directionX = playerTransform.position.x - transform.position.x;
+
+            if (Mathf.Abs(directionX) <= 0.0001f)
+            {
+                return;
+            }
+
+            spriteRenderer.flipX = directionX < 0.0f;
         }
 
         private void UpdateCombatState()
