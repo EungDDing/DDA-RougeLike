@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3928461750283647108}
   - component: {fileID: 3928461750283647109}
   - component: {fileID: 3928461750283647110}
+  - component: {fileID: 3329742352405622012}
   m_Layer: 10
   m_Name: FlyingChasingShotEnemy
   m_TagString: Enemy
@@ -175,14 +176,45 @@ MonoBehaviour:
   attackPower: 1
   knockbackForce: 2
   knockbackDuration: 0.1
+  softPushSpeed: 5
   chaseRange: 6
   shotRange: 4
+  shotRangeExitPadding: 1.25
   moveSpeed: 1.5
   fireRate: 0.5
   shotSpeed: 3
+  obstacleCastRadius: 0.35
+  obstacleLookAhead: 0.8
+  avoidanceStickBias: 0.35
+  turnRadiansPerSecond: 8
+  stopDeceleration: 12
   shotPosition: {fileID: 3928461750283647112}
   enemyProjectilePrefab: {fileID: 1257241605914056924, guid: d9f3cee2ece5706488e1071d0fc93309, type: 3}
   projectilePool: {fileID: 0}
+  animator: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+--- !u!95 &3329742352405622012
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3928461750283647105}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f621ae43c8a021c428aabecb6810a326, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3928461750283647111
 GameObject:
   m_ObjectHideFlags: 0
