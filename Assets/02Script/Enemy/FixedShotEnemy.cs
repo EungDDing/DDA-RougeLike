@@ -11,6 +11,7 @@ namespace DDARoguelike
     public class FixedShotEnemy : Enemy
     {
         private const string EnemyTag = "Enemy";
+        private static readonly int ShootHash = Animator.StringToHash("Shoot");
 
         [SerializeField] private float attackRange = 6.0f;
         [SerializeField] private FixedShotDirection shotDirection = FixedShotDirection.Left;
@@ -19,6 +20,8 @@ namespace DDARoguelike
         [SerializeField] private Transform shotPosition;
         [SerializeField] private GameObject enemyProjectilePrefab;
         [SerializeField] private ProjectilePool projectilePool;
+        [SerializeField] private Animator animator;
+        [SerializeField] private SpriteRenderer spriteRenderer;
 
         private float nextFireTime;
 
@@ -37,9 +40,24 @@ namespace DDARoguelike
             base.Awake();
             SetState(AI_State.Attack);
 
+            if (animator == null)
+            {
+                animator = GetComponent<Animator>();
+            }
+
+            if (spriteRenderer == null)
+            {
+                spriteRenderer = GetComponent<SpriteRenderer>();
+            }
+
             if (rigidbody2D == null)
             {
                 Debug.LogError($"[{nameof(FixedShotEnemy)}] Rigidbody2D is required on {gameObject.name}.", this);
+            }
+
+            if (animator == null)
+            {
+                Debug.LogError($"[{nameof(FixedShotEnemy)}] Animator is required on {gameObject.name}.", this);
             }
 
             if (shotPosition == null)
@@ -61,6 +79,8 @@ namespace DDARoguelike
             {
                 Debug.LogError($"[{nameof(FixedShotEnemy)}] projectilePool is not assigned on {gameObject.name}.", this);
             }
+
+            ApplyFacing();
         }
 
         protected override void OnPreparedFromPool()
@@ -72,11 +92,23 @@ namespace DDARoguelike
             {
                 projectilePool = FindFirstObjectByType<ProjectilePool>();
             }
+
+            ApplyFacing();
         }
 
         protected override void OnAttack()
         {
             TryShoot();
+        }
+
+        private void ApplyFacing()
+        {
+            if (spriteRenderer == null)
+            {
+                return;
+            }
+
+            spriteRenderer.flipX = shotDirection == FixedShotDirection.Left;
         }
 
         private void TryShoot()
@@ -97,6 +129,11 @@ namespace DDARoguelike
             }
 
             nextFireTime = Time.time + 1.0f / fireRate;
+
+            if (animator != null)
+            {
+                animator.SetTrigger(ShootHash);
+            }
 
             Vector2 direction = shotDirection == FixedShotDirection.Right
                 ? Vector2.right
