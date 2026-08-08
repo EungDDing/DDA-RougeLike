@@ -10,6 +10,8 @@ namespace DDARoguelike
         private const string EnemyProjectileTag = "EnemyProjectile";
         private const string PlayerProjectileTag = "PlayerProjectile";
 
+        [SerializeField] private float facingAngleOffsetDegrees = 90.0f;
+
         private Rigidbody2D rigidbody2D;
         private Vector2 spawnPosition;
         private Vector2 direction;
@@ -86,7 +88,8 @@ namespace DDARoguelike
 
         protected void ApplyFacingRotation(Vector2 travelDirection)
         {
-            float angleDegrees = Mathf.Atan2(travelDirection.y, travelDirection.x) * Mathf.Rad2Deg + 90.0f;
+            float angleDegrees = Mathf.Atan2(travelDirection.y, travelDirection.x) * Mathf.Rad2Deg
+                + facingAngleOffsetDegrees;
             transform.rotation = Quaternion.Euler(0.0f, 0.0f, angleDegrees);
         }
 
